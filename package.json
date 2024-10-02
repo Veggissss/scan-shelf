@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start server": "cd server && npm start",
     "setup": "npm i && cd server && npm i",
     "dev": "next dev",
     "build": "next build",
