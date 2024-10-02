@@ -1,3 +1,8 @@
+# dependencies
 node_modules
-.env
+
+# secret google credentials
 google-service-account.json
+
+# local env files
+.env*.local
