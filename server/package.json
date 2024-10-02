@@ -1,0 +1,17 @@
+{
+  "name": "scan-shelf-server",
+  "version": "0.1.0",
+  "description": "Backend that sends requests to the Google API. Also stores the EPub files.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Veggissss",
+  "dependencies": {
+    "@google-cloud/vision": "^4.3.2",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  }
+}
