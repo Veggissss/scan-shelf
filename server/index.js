@@ -1,6 +1,7 @@
 require('dotenv').config({ path: './public.env' });
 
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const vision = require('@google-cloud/vision');
 
@@ -10,6 +11,8 @@ const client = new vision.ImageAnnotatorClient();
 // Create Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json({ limit: '10mb' }));
