@@ -6,3 +6,7 @@ google-service-account.json
 
 # local env files
 .env*.local
+
+# ebook storage folder
+public/*
+!public/.gitkeep
