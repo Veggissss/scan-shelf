@@ -1,20 +1,59 @@
-/* src/App.css */
-.App {
+.shelf-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  h1 {
     text-align: center;
-    color: black;
-}
-
-.grid {
+    margin-bottom: 20px;
+  }
+  
+  .folders-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
-    padding: 20px;
-}
-
-.grid-item {
-    background: #f0f0f0;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .folder-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    transition: transform 0.2s;
+  }
+  
+  .folder-item:hover {
+    transform: scale(1.02);
+  }
+  
+  .folder-title {
+    cursor: pointer;
+    color: #0070f3;
+    transition: color 0.2s;
+  }
+  
+  .folder-title:hover {
+    color: #0056b3;
+  }
+  
+  .file-list {
+    margin-top: 10px;
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .file-list li {
+    margin: 5px 0;
+  }
+  
+  .file-list a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.2s;
+  }
+  
+  .file-list a:hover {
+    color: #0070f3;
+  }
+  
