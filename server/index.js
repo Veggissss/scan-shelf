@@ -8,8 +8,7 @@ const vision = require('@google-cloud/vision');
 
 const fs = require('fs');
 const path = require('path');
-
-const epub = require('epub');
+const AdmZip = require('adm-zip');
 
 // Create a new instance of the Vision API client
 const client = new vision.ImageAnnotatorClient();
@@ -61,18 +60,27 @@ app.get('/api/thumbnail/:folderName/:fileName', (req, res) => {
   fs.stat(epubPath, (err) => {
     if (err) return res.status(404).send('EPUB file not found.');
 
-    const epubInstance = new epub(epubPath);
+    // Load the EPUB file as a ZIP archive
+    const zip = new AdmZip(epubPath);
+    const zipEntries = zip.getEntries(); // Get all entries in the ZIP
 
-    epubInstance.on('end', () => {
-      const coverImage = epubInstance.cover; // Get the cover image URL
-      if (!coverImage) return res.status(404).send('Cover image not found.');
+    // Filter the entries to find the first .jpg file
+    const jpgEntry = zipEntries.find(entry => entry.entryName.endsWith('.jpg'));
 
-      // Convert the cover image URL to a local path
-      const imagePath = path.join(publicDir, folderName, coverImage);
-      res.sendFile(imagePath);
-    });
+    if (!jpgEntry) {
+      return res.status(404).send('No JPG image found in EPUB.');
+    }
 
-    epubInstance.parse(); // Start parsing the EPUB file
+    // Read the image file as a buffer
+    const imageBuffer = zip.readFile(jpgEntry);
+
+    if (!imageBuffer) {
+      return res.status(500).send('Failed to extract image.');
+    }
+
+    // Send the image buffer
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.send(imageBuffer);
   });
 });
 
