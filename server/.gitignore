@@ -3,6 +3,7 @@ node_modules
 
 # secret google credentials
 google-service-account.json
+google-service-account-dummy.json
 
 # local env files
 .env*.local

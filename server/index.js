@@ -9,6 +9,8 @@ const vision = require('@google-cloud/vision');
 const fs = require('fs');
 const path = require('path');
 
+const epub = require('epub');
+
 // Create a new instance of the Vision API client
 const client = new vision.ImageAnnotatorClient();
 
@@ -28,13 +30,50 @@ const publicDir = path.join(__dirname, 'public');
 
 // List all folders in the public directory
 app.get('/api/folders', (req, res) => {
-    fs.readdir(publicDir, { withFileTypes: true }, (err, files) => {
-        if (err) return res.status(500).send(err);
-        const folders = files
-            .filter(file => file.isDirectory())
-            .map(file => file.name);
-        res.json(folders);
+  fs.readdir(publicDir, { withFileTypes: true }, (err, files) => {
+    if (err) return res.status(500).send(err);
+
+    const foldersPromises = files
+      .filter(file => file.isDirectory())
+      .map(folder => {
+        const folderPath = path.join(publicDir, folder.name);
+        return new Promise((resolve) => {
+          fs.readdir(folderPath, (err, files) => {
+            if (err) return resolve({ folderName: folder.name, files: [] }); // Handle no file error
+            resolve({ folderName: folder.name, files });
+          });
+        });
+      });
+
+    // Wait for all folder promises to resolve
+    Promise.all(foldersPromises).then(folders => {
+      res.json(folders);
     });
+  });
+});
+
+// Endpoint to serve thumbnail image
+app.get('/api/thumbnail/:folderName/:fileName', (req, res) => {
+  const { folderName, fileName } = req.params;
+  const epubPath = path.join(publicDir, folderName, fileName);
+
+  // Check if the file exists
+  fs.stat(epubPath, (err) => {
+    if (err) return res.status(404).send('EPUB file not found.');
+
+    const epubInstance = new epub(epubPath);
+
+    epubInstance.on('end', () => {
+      const coverImage = epubInstance.cover; // Get the cover image URL
+      if (!coverImage) return res.status(404).send('Cover image not found.');
+
+      // Convert the cover image URL to a local path
+      const imagePath = path.join(publicDir, folderName, coverImage);
+      res.sendFile(imagePath);
+    });
+
+    epubInstance.parse(); // Start parsing the EPUB file
+  });
 });
 
 // POST /ocr route to process base64 image and return OCR results
