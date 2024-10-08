@@ -35,5 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Test ebook
-public/test.epub
+# PWA public build files
+/public/workbox-*.js
+/public/sw.js
+/public/robots.txt

@@ -1,9 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Rendition } from 'epubjs';
 import Section from 'epubjs/types/section';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
 import { ReactReader } from 'react-reader';
 import { useSearchParams } from 'next/navigation';
@@ -36,39 +35,38 @@ function ReaderPage() {
     }
   );
   const [rendition, setRendition] = useState<Rendition | undefined>(undefined)
-  const [text, setText] = useState<string>("Beans are cool\nI like beans");
+  const [text, setText] = useState<string>("Scanned\nClickable\nCharacters\nAppear\nHere!");
   const [snippet, setSnippet] = useState<Snippet | null>(null);
   const snippetRef = useRef<Snippet | null>(null);
 
+  const sendRestRequest = (base64ImageSnippet: string) => {
+    fetch(OCR_API_PATH, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ image: base64ImageSnippet }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          setText(data.error);
+          console.error("Error:", data.error)
+          return;
+        }
+        setText(data.text);
+        console.log("Success:", data);
+      }
+      )
+      .catch((error) => {
+        setText(error.message);
+        console.error("Error:", error)
+      }
+      );
+  };
+
   // Effect to attach click event listener after rendering
   useEffect(() => {
-
-    // Mock REST request function
-    const sendRestRequest = (base64ImageSnippet: string) => {
-      fetch(OCR_API_PATH, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ image: base64ImageSnippet }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            setText(data.error);
-            console.error("Error:", data.error)
-            return;
-          }
-          setText(data.text);
-          console.log("Success:", data);
-        }
-        )
-        .catch((error) => {
-          setText(error.message);
-          console.error("Error:", error)
-        }
-        );
-    };
 
     const handleSnippet = (e: MouseEvent, img: HTMLImageElement) => {
       const rect = img.getBoundingClientRect();
@@ -131,13 +129,12 @@ function ReaderPage() {
         // Mouse events for dragging
         img.onmousedown = (e) => {
           e.preventDefault();
-          isDragging = true; // Start dragging
+          isDragging = true;
         };
 
         img.onmousemove = (e) => {
           if (isDragging) {
             e.preventDefault();
-            // You can implement the dragging logic here
             const mouseEvent = new MouseEvent("click", {
               clientX: e.clientX,
               clientY: e.clientY,
@@ -148,20 +145,14 @@ function ReaderPage() {
 
         img.onmouseup = (e) => {
           e.preventDefault();
-          isDragging = false; // Stop dragging
-          // Send request on mouse up
-          if (snippetRef.current) {
-            sendRestRequest(snippetRef.current.dataUrl.split(",")[1]);
-          } else {
-            setText("No snippet selected");
-          }
+          isDragging = false;
         };
 
+        // Touch events for mobile
         img.ontouchstart = (e) => {
           e.preventDefault();
         };
 
-        // Enable dragging box selection
         img.ontouchmove = (e) => {
           e.preventDefault();
           const touch = e.touches[0];
@@ -170,19 +161,7 @@ function ReaderPage() {
             clientY: touch.clientY,
           });
           handleSnippet(mouseEvent, img);
-        };
-
-        // Send request on touch end
-        img.ontouchend = (e) => {
-          e.preventDefault();
-          if (snippetRef.current) {
-            sendRestRequest(snippetRef.current.dataUrl.split(",")[1]);
-          }
-          else {
-            setText("No snippet selected");
-          }
-        };
-        img.style.cursor = "pointer";
+        };       
       });
       return content;
     });
@@ -240,22 +219,39 @@ function ReaderPage() {
           />
         </div>
         {snippet && (
-          <img
-            src={snippet.dataUrl}
-            alt="Snippet"
-            onClick={() => setSnippet(null)}
-            style={{
-              position: "absolute",
-              top: `${snippet.top}px`,
-              left: `${snippet.left}px`,
-              width: `${SNIPPET_WIDTH}px`,
-              height: `${SNIPPET_HEIGHT}px`,
+          <div style={{
+            position: "absolute",
+            top: `${snippet.top}px`,
+            left: `${snippet.left}px`,
+            zIndex: 10,
+          }}>
+            <button style={{
+              position: "relative",
               border: "5px solid red",
               boxSizing: "border-box",
-              zIndex: 10,
-            }}
-            className="snippet-image"
-          />
+              backgroundColor: "black",
+              width: `${SNIPPET_WIDTH}px`,
+            }} onClick={() => {
+              if (snippetRef.current) {
+                sendRestRequest(snippetRef.current.dataUrl.split(",")[1]);
+              }
+            }}>Scan
+            </button>
+            <img
+              src={snippet.dataUrl}
+              alt="Snippet"
+              onClick={() => setSnippet(null)}
+              style={{
+                width: `${SNIPPET_WIDTH}px`,
+                height: `${SNIPPET_HEIGHT}px`,
+                border: "5px solid red",
+                boxSizing: "border-box",
+                cursor: "crosshair",
+              }}
+              className="snippet-image"
+            />
+            
+          </div>
         )}
       </div>
       <h1>Hello</h1>
@@ -263,4 +259,12 @@ function ReaderPage() {
   );
 };
 
-export default ReaderPage;
+function Reader() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReaderPage />
+    </Suspense>
+  );
+}
+
+export default Reader;

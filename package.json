@@ -13,6 +13,7 @@
   "dependencies": {
     "epubjs": "^0.3.93",
     "next": "14.2.12",
+    "next-pwa": "^5.6.0",
     "react": "^18",
     "react-dom": "^18",
     "react-reader": "^2.0.11",
