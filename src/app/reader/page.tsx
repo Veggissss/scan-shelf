@@ -8,16 +8,6 @@ import { ReactReader } from 'react-reader';
 import { useSearchParams } from 'next/navigation';
 import './reader.css';
 
-// Define server api path
-const OCR_API_PATH = `${process.env.NEXT_PUBLIC_API_HOST}/api/ocr`;
-
-// Define dictionary lookup path
-const DICTIONARY_LOOKUP = "https://jisho.org/search/";
-
-// Define snippet size (in pixels)
-const SNIPPET_WIDTH = 140;
-const SNIPPET_HEIGHT = 200;
-
 interface Snippet {
   dataUrl: string;
   left: number;
@@ -25,11 +15,32 @@ interface Snippet {
 }
 
 function ReaderPage() {
-  const searchParams = useSearchParams();
-  const filePath = searchParams.get("filePath");
+  const [apiHost] = useLocalStorageState<string>('apiHost', {
+    defaultValue: 'http://localhost:3001',
+  });
 
+  const [dictionaryLookup] = useLocalStorageState<string>('DICTIONARY_LOOKUP', {
+    defaultValue: 'https://jisho.org/search/',
+  });
+
+  const [snippetWidth] = useLocalStorageState<number>('snippetWidth', {
+    defaultValue: 140,
+  });
+
+  const [snippetHeight] = useLocalStorageState<number>('snippetHeight', {
+    defaultValue: 200,
+  });
+
+  // Get url params for file path
+  const searchParams = useSearchParams();
+  const FILE_PATH = searchParams.get("filePath");
+
+  // Define server api path
+  const OCR_API_PATH = `${apiHost}/api/ocr`;
+
+  // Page location for each epub file
   const [location, setLocation] = useLocalStorageState<string | number>(
-    "persist-location",
+    `persist-location-${FILE_PATH}`,
     {
       defaultValue: 0,
     }
@@ -84,20 +95,20 @@ function ReaderPage() {
       const ctx = canvas.getContext("2d");
 
       if (ctx) {
-        canvas.width = SNIPPET_WIDTH;
-        canvas.height = SNIPPET_HEIGHT;
+        canvas.width = snippetWidth;
+        canvas.height = snippetHeight;
 
         // Draw the clicked part of the image onto the canvas
         ctx.drawImage(
           img,
-          clickX - SNIPPET_WIDTH / 2, // Adjusted source X based on scale
-          clickY - SNIPPET_HEIGHT / 2, // Adjusted source Y based on scale
-          SNIPPET_WIDTH, // Source width
-          SNIPPET_HEIGHT, // Source height
+          clickX - snippetWidth / 2, // Adjusted source X based on scale
+          clickY - snippetHeight / 2, // Adjusted source Y based on scale
+          snippetWidth, // Source width
+          snippetHeight, // Source height
           0, // Target X
           0, // Target Y
-          SNIPPET_WIDTH, // Target width
-          SNIPPET_HEIGHT // Target height
+          snippetWidth, // Target width
+          snippetHeight // Target height
         );
 
         // Convert the canvas content to a data URL (Base64 string)
@@ -106,14 +117,14 @@ function ReaderPage() {
         // Store snippet data with the correct position, adjusted for zoom
         setSnippet({
           dataUrl,
-          left: (e.clientX - SNIPPET_WIDTH / 2),
-          top: (e.clientY - SNIPPET_HEIGHT / 2),
+          left: (e.clientX - snippetWidth / 2),
+          top: (e.clientY - snippetHeight / 2),
         });
 
         snippetRef.current = {
           dataUrl,
-          left: (e.clientX - SNIPPET_WIDTH / 2),
-          top: (e.clientY - SNIPPET_HEIGHT / 2),
+          left: (e.clientX - snippetWidth / 2),
+          top: (e.clientY - snippetHeight / 2),
         };
       }
     };
@@ -173,7 +184,7 @@ function ReaderPage() {
       <div className="ocr-output">
         {text && text.split("\n").map((word, index) => (
           <h1 key={index}>
-            <a href={`${DICTIONARY_LOOKUP}${word}`} target="_blank" rel="noopener noreferrer">
+            <a href={`${dictionaryLookup}${word}`} target="_blank" rel="noopener noreferrer">
               {word + "\n"}
             </a>
           </h1>
@@ -191,7 +202,7 @@ function ReaderPage() {
               });
               setRendition(_rendition)
             }}
-            url={filePath ? `${process.env.NEXT_PUBLIC_API_HOST}/${filePath}` : "/test.epub"}
+            url={FILE_PATH ? `${process.env.NEXT_PUBLIC_API_HOST}/${FILE_PATH}` : "/test.epub"}
             location={location}
             locationChanged={(loc: string) => setLocation(loc)}
             epubInitOptions={{
@@ -224,13 +235,14 @@ function ReaderPage() {
             top: `${snippet.top}px`,
             left: `${snippet.left}px`,
             zIndex: 10,
+            border: "5px solid grey",
+            boxSizing: "border-box",
+            cursor: "crosshair",
           }}>
             <button style={{
               position: "relative",
-              border: "5px solid red",
-              boxSizing: "border-box",
               backgroundColor: "black",
-              width: `${SNIPPET_WIDTH}px`,
+              width: `${snippetWidth}px`,
             }} onClick={() => {
               if (snippetRef.current) {
                 sendRestRequest(snippetRef.current.dataUrl.split(",")[1]);
@@ -242,19 +254,14 @@ function ReaderPage() {
               alt="Snippet"
               onClick={() => setSnippet(null)}
               style={{
-                width: `${SNIPPET_WIDTH}px`,
-                height: `${SNIPPET_HEIGHT}px`,
-                border: "5px solid red",
-                boxSizing: "border-box",
-                cursor: "crosshair",
+                width: `${snippetWidth}px`,
+                height: `${snippetHeight}px`,
               }}
               className="snippet-image"
             />
-            
           </div>
         )}
       </div>
-      <h1>Hello</h1>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 
 .ocr-output {
-    column-gap: 8rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 20px;
     padding: 1vh;
-    display: flex;
     background-color: rgb(80, 80, 80);
 }
-

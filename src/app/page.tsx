@@ -2,9 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import './shelf.css';
+import useLocalStorageState from 'use-local-storage-state';
 
-const FOLDERS_API_PATH = `${process.env.NEXT_PUBLIC_API_HOST}/api/folders`;
-const THUMBNAIL_API_PATH = `${process.env.NEXT_PUBLIC_API_HOST}/api/thumbnail`;
 
 interface Folder {
   folderName: string;
@@ -14,6 +13,13 @@ interface Folder {
 function ShelfPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+
+  const [apiHost] = useLocalStorageState<string>('apiHost', {
+    defaultValue: 'http://localhost:3001',
+  });
+
+  const FOLDERS_API_PATH = `${apiHost}/api/folders`;
+  const THUMBNAIL_API_PATH = `${apiHost}/api/thumbnail`;
 
   useEffect(() => {
     const fetchFolders = async () => {
