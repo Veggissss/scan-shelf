@@ -11,21 +11,24 @@ interface Folder {
   files: string[];
 }
 
-interface Thumbnail {
-  fileName: string;
-  imageUrl: string;
-}
-
 function ShelfPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const [thumbnails, setThumbnails] = useState<Thumbnail[]>([]); // State to hold thumbnails
 
   useEffect(() => {
     const fetchFolders = async () => {
       try {
         const response = await fetch(FOLDERS_API_PATH);
         const data: Folder[] = await response.json();
+
+        data.forEach((folder) => {
+          folder.files.sort((a, b) => {
+            const numA = parseInt(a.match(/\d+/)?.[0] || "0", 10);
+            const numB = parseInt(b.match(/\d+/)?.[0] || "0", 10);
+            return numA - numB;
+          });
+        });
+        
         setFolders(data);
       } catch (error) {
         console.error("Error fetching folders:", error);
@@ -35,38 +38,14 @@ function ShelfPage() {
     fetchFolders();
   }, []);
 
-  const fetchThumbnail = async (folderName: string, fileName: string) => {
-    try {
-      const response = await fetch(`${THUMBNAIL_API_PATH}/${folderName}/${fileName}`);
-      const imageUrl = await response.json();
-      return imageUrl; // Assuming the response contains the image URL directly
-    } catch (error) {
-      console.error(`Error fetching thumbnail for ${fileName}:`, error);
-      return null;
-    }
-  };
-
+  
   const handleFolderClick = (folderName: string) => {
     setSelectedFolder(selectedFolder === folderName ? null : folderName);
   };
 
   // Fetch thumbnails for files in selected folder
   useEffect(() => {
-    const loadThumbnails = async () => {
-      if (selectedFolder) {
-        const folder = folders.find(folder => folder.folderName === selectedFolder);
-        if (folder) {
-          const thumbnailPromises = folder.files.map(async (file) => {
-            const imageUrl = await fetchThumbnail(folder.folderName, file);
-            return { fileName: file, imageUrl };
-          });
-          const results = await Promise.all(thumbnailPromises);
-          setThumbnails(results.filter(thumbnail => thumbnail.imageUrl)); // Filter out nulls
-        }
-      }
-    };
 
-    loadThumbnails();
   }, [selectedFolder, folders]);
 
   return (
@@ -74,18 +53,18 @@ function ShelfPage() {
       <h1>Folder Viewer</h1>
       <div className="folders-grid">
         {folders.map((folder) => (
-          <div key={folder.folderName} className="folder-item">
+          <div key={folder.folderName}>
             <h2 onClick={() => handleFolderClick(folder.folderName)} className="folder-title">
               {folder.folderName}
             </h2>
             {selectedFolder === folder.folderName && (
               <ul className="file-list">
-                {thumbnails.map(({ fileName, imageUrl }) => (
-                  <li key={fileName}>
+                {folder.files.map((fileName) => (
+                  <li key={fileName} className="folder-item">
                     <a href={`/reader?filePath=${encodeURIComponent(folder.folderName + "/" + fileName)}`}>
-                      <img src={imageUrl} alt={fileName} className="thumbnail" />
+                      <img src={`${THUMBNAIL_API_PATH}/${selectedFolder}/${fileName}`} alt={fileName} className="thumbnail"/>
+                      <p>{fileName}</p>
                     </a>
-                    <span>{fileName}</span>
                   </li>
                 ))}
               </ul>

@@ -1,59 +1,59 @@
 .shelf-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .folders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-  }
-  
-  .folder-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    transition: transform 0.2s;
-  }
-  
-  .folder-item:hover {
-    transform: scale(1.02);
-  }
-  
-  .folder-title {
-    cursor: pointer;
-    color: #0070f3;
-    transition: color 0.2s;
-  }
-  
-  .folder-title:hover {
-    color: #0056b3;
-  }
-  
-  .file-list {
-    margin-top: 10px;
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .file-list li {
-    margin: 5px 0;
-  }
-  
-  .file-list a {
-    text-decoration: none;
-    color: #333;
-    transition: color 0.2s;
-  }
-  
-  .file-list a:hover {
-    color: #0070f3;
-  }
-  
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.folder-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  transition: transform 0.2s;
+}
+
+.folder-item:hover {
+  transform: scale(1.02);
+}
+
+.folder-title {
+  text-align: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  color: #000000;
+  transition: color 0.2s;
+}
+
+.folder-title:hover {
+  color: #0056b3;
+}
+
+.file-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin: 5px 0;
+}
+
+.file-list p {
+  color: #000000;
+}

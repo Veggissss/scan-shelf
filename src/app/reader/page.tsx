@@ -3,7 +3,7 @@
 import { Rendition } from 'epubjs';
 import Section from 'epubjs/types/section';
 import React, { useState, useEffect, useRef } from 'react';
-import useLocalStorageState from 'use-local-storage-state'
+import useLocalStorageState from 'use-local-storage-state';
 import { ReactReader } from 'react-reader';
 import { useSearchParams } from 'next/navigation';
 import './reader.css';
@@ -35,7 +35,7 @@ function ReaderPage() {
     }
   );
   const [rendition, setRendition] = useState<Rendition | undefined>(undefined)
-  const [text, setText] = useState<string>("Sn");
+  const [text, setText] = useState<string>("Beans are cool\nI like beans");
   const [snippet, setSnippet] = useState<Snippet | null>(null);
   const snippetRef = useRef<Snippet | null>(null);
 
@@ -114,7 +114,7 @@ function ReaderPage() {
         };
 
         // Send the image snippet to the server
-        if (sendRequest){
+        if (sendRequest) {
           sendRestRequest(dataUrl.split(",")[1]);
         }
       }
@@ -149,10 +149,10 @@ function ReaderPage() {
         // Send request on touch end
         img.ontouchend = (e) => {
           e.preventDefault();
-          if (snippetRef.current){
+          if (snippetRef.current) {
             sendRestRequest(snippetRef.current.dataUrl.split(",")[1]);
           }
-          else{
+          else {
             setText("No snippet selected");
           }
         };
@@ -166,14 +166,22 @@ function ReaderPage() {
 
   return (
     <div>
-
-      <div style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
+      <div className="ocr-output">
+        {text && text.split("\n").map((word, index) => (
+          <h1 key={index}>
+            <a href={`${DICTIONARY_LOOKUP}${word}`} target="_blank" rel="noopener noreferrer">
+              {word + "\n"}
+            </a>
+          </h1>
+        ))}
+      </div>
+      <div>
+        <div style={{ width: "100vw", height: "95vh", position: "relative" }}>
           <ReactReader
             getRendition={(_rendition: Rendition) => {
               setRendition(_rendition)
             }}
-            url={filePath ? `${process.env.NEXT_PUBLIC_API_HOST}/${filePath}`: "/test.epub"}
+            url={filePath ? `${process.env.NEXT_PUBLIC_API_HOST}/${filePath}` : "/test.epub"}
             location={location}
             locationChanged={(loc: string) => setLocation(loc)}
             epubInitOptions={{
@@ -219,15 +227,6 @@ function ReaderPage() {
             className="snippet-image"
           />
         )}
-        <div>
-          {text && text.split("\n").map((word, index) => (
-            <h1 key={index}>
-              <a href={`${DICTIONARY_LOOKUP}${word}`} target="_blank" rel="noopener noreferrer">
-                {word + "\n"}
-              </a>
-            </h1>
-          ))}
-        </div>
       </div>
     </div>
   );

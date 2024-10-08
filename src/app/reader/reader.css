@@ -1,0 +1,8 @@
+
+.ocr-output {
+    gap: 80px;
+    text-align: center;
+    padding: 20px;
+    height: 5vh;
+    display: flex;
+}
