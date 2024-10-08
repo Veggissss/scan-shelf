@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Rendition } from 'epubjs';
@@ -69,13 +70,16 @@ function ReaderPage() {
         );
     };
 
-    // Function to handle clicks inside the iframe content
-    const handleIframeClick = (e: MouseEvent, img: HTMLImageElement, sendRequest: boolean = true) => {
+    const handleSnippet = (e: MouseEvent, img: HTMLImageElement) => {
       const rect = img.getBoundingClientRect();
 
-      // Calculate the click position relative to the image
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
+      // Get the current device pixel ratio (to account for zoom/scale)
+      const scaleX = img.naturalWidth / rect.width; // Scale based on the actual size of the image
+      const scaleY = img.naturalHeight / rect.height;
+
+      // Calculate the click position relative to the image, adjusted for zoom/scale
+      const clickX = (e.clientX - rect.left) * scaleX;
+      const clickY = (e.clientY - rect.top) * scaleY;
 
       // Create a canvas to draw the image snippet
       const canvas = document.createElement("canvas");
@@ -88,8 +92,8 @@ function ReaderPage() {
         // Draw the clicked part of the image onto the canvas
         ctx.drawImage(
           img,
-          clickX - SNIPPET_WIDTH / 2, // Source X
-          clickY - SNIPPET_HEIGHT / 2, // Source Y
+          clickX - SNIPPET_WIDTH / 2, // Adjusted source X based on scale
+          clickY - SNIPPET_HEIGHT / 2, // Adjusted source Y based on scale
           SNIPPET_WIDTH, // Source width
           SNIPPET_HEIGHT, // Source height
           0, // Target X
@@ -101,22 +105,18 @@ function ReaderPage() {
         // Convert the canvas content to a data URL (Base64 string)
         const dataUrl = canvas.toDataURL("image/png");
 
+        // Store snippet data with the correct position, adjusted for zoom
         setSnippet({
           dataUrl,
-          left: clickX - SNIPPET_WIDTH / 2,
-          top: clickY - SNIPPET_HEIGHT / 2,
+          left: (e.clientX - SNIPPET_WIDTH / 2),
+          top: (e.clientY - SNIPPET_HEIGHT / 2),
         });
 
         snippetRef.current = {
           dataUrl,
-          left: clickX - SNIPPET_WIDTH / 2,
-          top: clickY - SNIPPET_HEIGHT / 2,
+          left: (e.clientX - SNIPPET_WIDTH / 2),
+          top: (e.clientY - SNIPPET_HEIGHT / 2),
         };
-
-        // Send the image snippet to the server
-        if (sendRequest) {
-          sendRestRequest(dataUrl.split(",")[1]);
-        }
       }
     };
 
@@ -126,9 +126,35 @@ function ReaderPage() {
     rendition.hooks.content.register((content: Section) => {
       const images = content.document.querySelectorAll("img");
       images.forEach((img) => {
-        img.onclick = (e) => {
+        let isDragging = false;
+
+        // Mouse events for dragging
+        img.onmousedown = (e) => {
           e.preventDefault();
-          handleIframeClick(e, img);
+          isDragging = true; // Start dragging
+        };
+
+        img.onmousemove = (e) => {
+          if (isDragging) {
+            e.preventDefault();
+            // You can implement the dragging logic here
+            const mouseEvent = new MouseEvent("click", {
+              clientX: e.clientX,
+              clientY: e.clientY,
+            });
+            handleSnippet(mouseEvent, img);
+          }
+        };
+
+        img.onmouseup = (e) => {
+          e.preventDefault();
+          isDragging = false; // Stop dragging
+          // Send request on mouse up
+          if (snippetRef.current) {
+            sendRestRequest(snippetRef.current.dataUrl.split(",")[1]);
+          } else {
+            setText("No snippet selected");
+          }
         };
 
         img.ontouchstart = (e) => {
@@ -143,7 +169,7 @@ function ReaderPage() {
             clientX: touch.clientX,
             clientY: touch.clientY,
           });
-          handleIframeClick(mouseEvent, img, false);
+          handleSnippet(mouseEvent, img);
         };
 
         // Send request on touch end
@@ -156,7 +182,6 @@ function ReaderPage() {
             setText("No snippet selected");
           }
         };
-
         img.style.cursor = "pointer";
       });
       return content;
@@ -176,9 +201,15 @@ function ReaderPage() {
         ))}
       </div>
       <div>
-        <div style={{ width: "100vw", height: "95vh", position: "relative" }}>
+        <div style={{ height: "95vh" }}>
           <ReactReader
             getRendition={(_rendition: Rendition) => {
+              _rendition.themes.default({
+                'img': {
+                  'display': 'block',
+                  'margin': '0 auto', // Centers the image horizontally
+                },
+              });
               setRendition(_rendition)
             }}
             url={filePath ? `${process.env.NEXT_PUBLIC_API_HOST}/${filePath}` : "/test.epub"}
@@ -192,18 +223,17 @@ function ReaderPage() {
               allowScriptedContent: true, // Adds `allow-scripts` to sandbox-attribute
               manager: "default",
               flow: "paginated",
+              height: "100vh",
+              width: "auto",
+              defaultDirection: "ltr",
+              spread: "none",
             }}
             epubViewStyles={{
               view: {
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "250%",
-                width: "250%",
+                backgroundColor: "black",
               },
               viewHolder: {
-                height: "100%",
-                width: "100%",
+                backgroundColor: "black",
               },
             }}
             showToc={false}
@@ -228,6 +258,7 @@ function ReaderPage() {
           />
         )}
       </div>
+      <h1>Hello</h1>
     </div>
   );
 };

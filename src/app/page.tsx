@@ -50,7 +50,7 @@ function ShelfPage() {
 
   return (
     <div className="shelf-container">
-      <h1>Folder Viewer</h1>
+      <h1>Scan Shelf Library</h1>
       <div className="folders-grid">
         {folders.map((folder) => (
           <div key={folder.folderName}>

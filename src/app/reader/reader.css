@@ -1,8 +1,7 @@
 
 .ocr-output {
-    gap: 80px;
-    text-align: center;
-    padding: 20px;
-    height: 5vh;
+    column-gap: 8rem;
+    padding: 1vh;
     display: flex;
+    background-color: rgb(80, 80, 80);
 }

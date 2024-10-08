@@ -1,0 +1,23 @@
+header {
+    background-color: #303030;
+    padding: 1.5vh;
+}
+
+nav ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav li :hover {
+    font-style: italic;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
