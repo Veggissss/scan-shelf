@@ -1,6 +1,6 @@
 {
     "name": "Scan Shelf",
-    "short_name": "S-Shelf",
+    "short_name": "ScanShelf",
     "description": "Simple EPub Reader with OCR scanning.",
     "icons": [
         {

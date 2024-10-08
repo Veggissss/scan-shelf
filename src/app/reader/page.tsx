@@ -177,7 +177,7 @@ function ReaderPage() {
       return content;
     });
 
-  }, [rendition, snippet]);
+  }, [rendition, snippet, snippetHeight, snippetWidth]);
 
   return (
     <div>
@@ -202,7 +202,7 @@ function ReaderPage() {
               });
               setRendition(_rendition)
             }}
-            url={FILE_PATH ? `${process.env.NEXT_PUBLIC_API_HOST}/${FILE_PATH}` : "/test.epub"}
+            url={FILE_PATH ? `${apiHost}/${FILE_PATH}` : "/test.epub"}
             location={location}
             locationChanged={(loc: string) => setLocation(loc)}
             epubInitOptions={{
