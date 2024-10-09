@@ -1,8 +1,13 @@
 
 .ocr-output {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     padding: 1vh;
+    gap: 20px;
     background-color: rgb(80, 80, 80);
+    color: #0070f3;
+}
+
+.reader-information{
+    text-align: center;
 }

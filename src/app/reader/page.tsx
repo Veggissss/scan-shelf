@@ -1,6 +1,6 @@
 "use client";
 
-import { Rendition } from 'epubjs';
+import { NavItem, Rendition } from 'epubjs';
 import Section from 'epubjs/types/section';
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
@@ -15,20 +15,25 @@ interface Snippet {
 }
 
 function ReaderPage() {
+  const defaultApiHost = 'http://localhost:3001';
+  const defaultDictionaryLookup = 'https://jisho.org/search/';
+  const defaultSnippetWidth = 140;
+  const defaultSnippetHeight = 200;
+
   const [apiHost] = useLocalStorageState<string>('apiHost', {
-    defaultValue: 'http://localhost:3001',
+    defaultValue: defaultApiHost,
   });
 
-  const [dictionaryLookup] = useLocalStorageState<string>('DICTIONARY_LOOKUP', {
-    defaultValue: 'https://jisho.org/search/',
+  const [dictionaryLookup] = useLocalStorageState<string>('dictionaryLookup', {
+    defaultValue: defaultDictionaryLookup,
   });
 
   const [snippetWidth] = useLocalStorageState<number>('snippetWidth', {
-    defaultValue: 140,
+    defaultValue: defaultSnippetWidth,
   });
 
   const [snippetHeight] = useLocalStorageState<number>('snippetHeight', {
-    defaultValue: 200,
+    defaultValue: defaultSnippetHeight,
   });
 
   // Get url params for file path
@@ -39,12 +44,16 @@ function ReaderPage() {
   const OCR_API_PATH = `${apiHost}/api/ocr`;
 
   // Page location for each epub file
-  const [location, setLocation] = useLocalStorageState<string | number>(
+  const [location, setLocation] = useLocalStorageState<string>(
     `persist-location-${FILE_PATH}`,
     {
-      defaultValue: 0,
+      defaultValue: "0",
     }
   );
+
+  const [pageDisplay, setPageDisplay] = useState<string>("Page x");
+  const toc = useRef<NavItem[]>([])
+  
   const [rendition, setRendition] = useState<Rendition | undefined>(undefined)
   const [text, setText] = useState<string>("Scanned\nClickable\nCharacters\nAppear\nHere!");
   const [snippet, setSnippet] = useState<Snippet | null>(null);
@@ -172,7 +181,7 @@ function ReaderPage() {
             clientY: touch.clientY,
           });
           handleSnippet(mouseEvent, img);
-        };       
+        };
       });
       return content;
     });
@@ -204,7 +213,18 @@ function ReaderPage() {
             }}
             url={FILE_PATH ? `${apiHost}/${FILE_PATH}` : "/test.epub"}
             location={location}
-            locationChanged={(loc: string) => setLocation(loc)}
+            tocChanged={(_toc) => (toc.current = _toc)}
+            locationChanged={(loc: string) => {
+              setLocation(loc)
+              if (rendition && toc) {
+                const start = rendition.location.start;
+                const currentPage = toc.current.find((item) => item.href === start.href)
+                setPageDisplay(
+                  `Reading ${FILE_PATH} ${currentPage ? currentPage.label : 'n/a'}`
+                )
+              }
+            }
+            }
             epubInitOptions={{
               openAs: "epub",
             }}
@@ -226,7 +246,7 @@ function ReaderPage() {
                 backgroundColor: "black",
               },
             }}
-            showToc={false}
+            showToc={true}
           />
         </div>
         {snippet && (
@@ -261,6 +281,9 @@ function ReaderPage() {
             />
           </div>
         )}
+      </div>
+      <div className="reader-information">
+        <h1>{pageDisplay}</h1>
       </div>
     </div>
   );
