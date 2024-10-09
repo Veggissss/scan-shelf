@@ -1,28 +1,24 @@
 "use client";
 
 import useLocalStorageState from 'use-local-storage-state';
+import { defaultSettings } from '../default.config';
 import './settings.css';
 
 const Settings = () => {
-    const defaultApiHost = 'http://localhost:3001';
-    const defaultDictionaryLookup = 'https://jisho.org/search/';
-    const defaultSnippetWidth = 140;
-    const defaultSnippetHeight = 200;
-
     const [apiHost, setApiHost] = useLocalStorageState<string>('apiHost', {
-        defaultValue: defaultApiHost,
+        defaultValue: defaultSettings.API_HOST,
     });
 
     const [dictionaryLookup, setDictionaryLookup] = useLocalStorageState<string>('dictionaryLookup', {
-        defaultValue: defaultDictionaryLookup,
+        defaultValue: defaultSettings.DICTIONARY_LOOKUP,
     });
 
     const [snippetWidth, setSnippetWidth] = useLocalStorageState<number>('snippetWidth', {
-        defaultValue: defaultSnippetWidth,
+        defaultValue: defaultSettings.SNIPPET_WIDTH,
     });
 
     const [snippetHeight, setSnippetHeight] = useLocalStorageState<number>('snippetHeight', {
-        defaultValue: defaultSnippetHeight,
+        defaultValue: defaultSettings.SNIPPET_HEIGHT,
     });
 
     // Handlers for changing the values
@@ -43,10 +39,10 @@ const Settings = () => {
     };
 
     function resetSettings() {
-        setApiHost(defaultApiHost);
-        setDictionaryLookup(defaultDictionaryLookup);
-        setSnippetWidth(defaultSnippetWidth);
-        setSnippetHeight(defaultSnippetHeight);
+        setApiHost(defaultSettings.API_HOST);
+        setDictionaryLookup(defaultSettings.DICTIONARY_LOOKUP);
+        setSnippetWidth(defaultSettings.SNIPPET_WIDTH);
+        setSnippetHeight(defaultSettings.SNIPPET_HEIGHT);
     }
 
     return (
