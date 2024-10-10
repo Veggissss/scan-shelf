@@ -1,14 +1,15 @@
 {
   "name": "scan-shelf",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "setup": "npm i && cd server && npm i",
-    "server": "cd server && npm start",
     "dev": "next dev",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "lint": "next lint",
+    "server": "cd server && npm start",
+    "setup": "npm i && cd server && npm i",
     "launch": "concurrently \"npm run build && npm start\" \"npm run server\""
   },
   "dependencies": {
