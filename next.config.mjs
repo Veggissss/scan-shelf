@@ -1,10 +1,18 @@
 /** @type {import('next').NextConfig} */
 import withPWA from 'next-pwa';
 
+const isPageConfig = process.env.NEXT_CONFIG === 'pages';
+const path = isPageConfig ? '/scan-shelf' : '';
+
 const nextConfig = {
+  reactStrictMode: true,
+  trailingSlash: true,
+};
+
+const nextPagesConfig = {
   reactStrictMode: true, // Enable React strict mode for better error handling
 
-  output: 'export', // For static export
+  output: 'export',
   trailingSlash: true, // Ensures all routes are exported with a trailing slash
 
   // Asset directory for the static export
@@ -13,8 +21,12 @@ const nextConfig = {
   },
 
   // Additional configuration for base path if hosted on GitHub Pages
-  basePath: '/scan-shelf',
-  assetPrefix: '/scan-shelf/',
+  basePath: path,
+  assetPrefix: `${path}/`,
+  publicRuntimeConfig: {
+    basePath: path,
+    assetPrefix: `${path}/`,
+  },
 
   // Customize Webpack for any additional modifications
   webpack: (config) => {
@@ -23,9 +35,10 @@ const nextConfig = {
   },
 };
 
+const appliedConfig = isPageConfig ? nextPagesConfig : nextConfig;
 export default withPWA({
   dest: 'public', // Destination for service worker and related files
   disable: process.env.NODE_ENV === 'development', // Disable in development mode
   register: true, // Automatically registers the service worker
   skipWaiting: true, // Automatically activates updated service workers
-})(nextConfig);
+})(appliedConfig);

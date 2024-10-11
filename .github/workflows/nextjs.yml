@@ -1,10 +1,6 @@
 name: Deploy Next.js PWA site to GitHub Pages
 
 on:
-  # Trigger deployment on push to the main branch
-  push:
-    branches: ["main"]
-
   # Allow manual triggering from the GitHub Actions tab
   workflow_dispatch:
 
@@ -50,7 +46,7 @@ jobs:
         run: npm install
 
       - name: Build Next.js Project
-        run: npm run build
+        run: npm run build:static
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3

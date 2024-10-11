@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
+    "build:static": "NEXT_CONFIG=static next build",
     "start": "next start",
     "lint": "next lint",
     "server": "cd server && npm start",
     "setup": "npm i && cd server && npm i",
-    "launch": "concurrently \"npm run build && npm start\" \"npm run server\""
+    "local": "concurrently \"npm run build && npm run start\" \"npm run server\""
   },
   "dependencies": {
     "epubjs": "^0.3.93",
