@@ -34,5 +34,5 @@ jobs:
           file: ./server/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/scan-shelf:server
+            ${{ secrets.DOCKER_USERNAME }}/scan-shelf:backend
           platforms: linux/arm/v7
