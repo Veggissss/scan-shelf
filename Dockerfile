@@ -2,7 +2,7 @@
 FROM arm32v7/node:alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --verbose
 COPY . .
 RUN npm run build
 
