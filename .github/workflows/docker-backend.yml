@@ -1,6 +1,9 @@
 name: Backend Docker Image (arm32v7)
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:  # Manual triggering
 
 jobs:
@@ -31,7 +34,5 @@ jobs:
           file: ./server/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/scan-shelf:arm32v7
             ${{ secrets.DOCKER_USERNAME }}/scan-shelf:server
-            ${{ secrets.DOCKER_USERNAME }}/scan-shelf:latest
           platforms: linux/arm/v7
