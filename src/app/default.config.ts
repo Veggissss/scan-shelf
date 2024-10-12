@@ -3,4 +3,5 @@ export const defaultSettings = {
     DICTIONARY_LOOKUP: 'https://jisho.org/search/',
     SNIPPET_WIDTH: 140,
     SNIPPET_HEIGHT: 200,
+    IS_LTR: true,
 };

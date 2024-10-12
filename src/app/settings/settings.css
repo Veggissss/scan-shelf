@@ -34,6 +34,18 @@ input[type='number'] {
     appearance: textfield;
 }
 
+input[type='checkbox']{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    accent-color: #0070f3;
+
+    &:checked {
+        background-color: #0070f3;
+        border-color: #0070f3;
+    }
+}
+
 .reset-button {
     background-color: #0070f3;
     color: white;

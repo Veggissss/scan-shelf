@@ -21,28 +21,16 @@ const Settings = () => {
         defaultValue: defaultSettings.SNIPPET_HEIGHT,
     });
 
-    // Handlers for changing the values
-    const handleApiHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setApiHost(e.target.value);
-    };
-
-    const handleDictionaryLookupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDictionaryLookup(e.target.value);
-    };
-
-    const handleSnippetWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSnippetWidth(Number(e.target.value));
-    };
-
-    const handleSnippetHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSnippetHeight(Number(e.target.value));
-    };
+    const [isLTR, setIsLTR] = useLocalStorageState<boolean>('isLTR', {
+        defaultValue: defaultSettings.IS_LTR,
+    });
 
     function resetSettings() {
         setApiHost(defaultSettings.API_HOST);
         setDictionaryLookup(defaultSettings.DICTIONARY_LOOKUP);
         setSnippetWidth(defaultSettings.SNIPPET_WIDTH);
         setSnippetHeight(defaultSettings.SNIPPET_HEIGHT);
+        setIsLTR(defaultSettings.IS_LTR);
     }
 
     return (
@@ -55,7 +43,7 @@ const Settings = () => {
                     id="apiHost"
                     type="text"
                     value={apiHost}
-                    onChange={handleApiHostChange}
+                    onChange={(e) => setApiHost(e.target.value)}
                     placeholder="Enter API host"
                 />
             </div>
@@ -66,7 +54,7 @@ const Settings = () => {
                     id="dictionaryLookup"
                     type="text"
                     value={dictionaryLookup}
-                    onChange={handleDictionaryLookupChange}
+                    onChange={(e) => setDictionaryLookup(e.target.value)}
                     placeholder="Enter dictionary lookup URL"
                 />
             </div>
@@ -77,7 +65,7 @@ const Settings = () => {
                     id="snippetWidth"
                     type="number"
                     value={snippetWidth}
-                    onChange={handleSnippetWidthChange}
+                    onChange={(e) => setSnippetWidth(Number(e.target.value))}
                     placeholder="Enter snippet width"
                 />
             </div>
@@ -88,8 +76,18 @@ const Settings = () => {
                     id="snippetHeight"
                     type="number"
                     value={snippetHeight}
-                    onChange={handleSnippetHeightChange}
+                    onChange={(e) => setSnippetHeight(Number(e.target.value))}
                     placeholder="Enter snippet height"
+                />
+            </div>
+
+            <div className="settings-group">
+                <label htmlFor="isRTL">Left-to-Right Text</label>
+                <input
+                    id="isRTL"
+                    type="checkbox"
+                    checked={isLTR}
+                    onChange={(e) => setIsLTR(e.target.checked)}
                 />
             </div>
 

@@ -20,6 +20,7 @@ const Reader: React.FC = () => {
     const [dictionaryLookup] = useLocalStorageState('dictionaryLookup', { defaultValue: defaultSettings.DICTIONARY_LOOKUP });
     const [snippetWidth] = useLocalStorageState('snippetWidth', { defaultValue: defaultSettings.SNIPPET_WIDTH });
     const [snippetHeight] = useLocalStorageState('snippetHeight', { defaultValue: defaultSettings.SNIPPET_HEIGHT });
+    const [isLTR] = useLocalStorageState('isLTR', { defaultValue: defaultSettings.IS_LTR });
 
     const searchParams = useSearchParams();
     const FILE_PATH = searchParams.get('filePath');
@@ -135,6 +136,7 @@ const Reader: React.FC = () => {
                             setPageDisplay(`Reading ${FILE_PATH} ${currentPage ? currentPage.label : 'n/a'}`);
                         }
                     }}
+                    isRTL={!isLTR}
                     epubInitOptions={{ openAs: 'epub' }}
                     epubOptions={{
                         allowPopups: true,
@@ -143,7 +145,6 @@ const Reader: React.FC = () => {
                         flow: 'paginated',
                         height: '100vh',
                         width: 'auto',
-                        defaultDirection: 'ltr',
                         spread: 'none',
                     }}
                     epubViewStyles={{ view: { backgroundColor: 'black' }, viewHolder: { backgroundColor: 'black' } }}
