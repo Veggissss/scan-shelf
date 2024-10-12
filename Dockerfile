@@ -1,8 +1,8 @@
 # Stage 1: Build the application (Non-ARM)
-FROM node:18.20.4-alpine AS build
+FROM --platform=linux/amd64 node:18.20.4-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --verbose
 COPY . .
 RUN npm run build
 
