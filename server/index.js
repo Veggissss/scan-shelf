@@ -22,10 +22,11 @@ app.use(cors());
 // Middleware to parse JSON bodies
 app.use(bodyParser.json({ limit: '10mb' }));
 
-// Make the public folder available
-app.use(express.static('public'));
+// Get the public directory path from the environment variable
+const publicDir = process.env.PUBLIC_DIR || path.join(__dirname, 'public');
 
-const publicDir = path.join(__dirname, 'public');
+// Make the public folder available
+app.use(express.static(publicDir));
 
 // List all folders in the public directory
 app.get('/api/folders', (req, res) => {
