@@ -1,6 +1,6 @@
 header {
     background-color: #303030;
-    padding: 1.5vh;
+    padding: 1em;
 }
 
 nav ul {
@@ -10,11 +10,12 @@ nav ul {
 }
 
 nav ul li {
+    text-align: center;
     display: inline;
 }
 
 nav li :hover {
-    font-style: italic;
+    color: #0070f3;
 }
 
 a {

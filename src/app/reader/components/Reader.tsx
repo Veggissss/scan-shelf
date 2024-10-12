@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavItem, Rendition } from 'epubjs';
-import { ReactReader } from 'react-reader';
+import { IReactReaderStyle, ReactReader, ReactReaderStyle } from 'react-reader';
 import { useSearchParams } from 'next/navigation';
 import useLocalStorageState from 'use-local-storage-state';
 import OCROutput from './ScanOutput';
@@ -25,7 +25,7 @@ const Reader: React.FC = () => {
     const searchParams = useSearchParams();
     const FILE_PATH = searchParams.get('filePath');
 
-    const [, setCurrentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader?filePath=${FILE_PATH || ''} `});
+    const [, setCurrentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader?filePath=${FILE_PATH || ''} ` });
 
     const [location, setLocation] = useLocalStorageState(`persist-location-${FILE_PATH}`, { defaultValue: '0' });
     const [pageDisplay, setPageDisplay] = useState('Reading n/a');
@@ -117,6 +117,7 @@ const Reader: React.FC = () => {
             <OCROutput text={text} dictionaryLookup={dictionaryLookup} />
             <div style={{ height: '95vh' }}>
                 <ReactReader
+                    title={""}
                     getRendition={_rendition => {
                         _rendition.themes.default({ img: { display: 'block', margin: '0 auto' } });
                         setRendition(_rendition)
@@ -147,6 +148,7 @@ const Reader: React.FC = () => {
                         width: 'auto',
                         spread: 'none',
                     }}
+                    readerStyles={darkReaderStyle}
                     epubViewStyles={{ view: { backgroundColor: 'black' }, viewHolder: { backgroundColor: 'black' } }}
                 />
             </div>
@@ -161,5 +163,43 @@ const Reader: React.FC = () => {
         </div>
     );
 };
+
+const darkReaderStyle: IReactReaderStyle = {
+    ...ReactReaderStyle,
+    arrow: {
+        ...ReactReaderStyle.arrow,
+        color: 'white',
+    },
+    arrowHover: {
+        ...ReactReaderStyle.arrowHover,
+        color: '#ccc',
+    },
+    readerArea: {
+        ...ReactReaderStyle.readerArea,
+        backgroundColor: '#000',
+        transition: undefined,
+    },
+    titleArea: {
+        ...ReactReaderStyle.titleArea,
+        color: '#ccc',
+    },
+    tocArea: {
+        ...ReactReaderStyle.tocArea,
+        background: '#111',
+    },
+    tocButtonExpanded: {
+        ...ReactReaderStyle.tocButtonExpanded,
+        background: '#222',
+    },
+    tocButtonBar: {
+        ...ReactReaderStyle.tocButtonBar,
+        background: '#fff',
+    },
+    tocButton: {
+        ...ReactReaderStyle.tocButton,
+        color: 'white',
+    },
+}
+
 
 export default Reader;

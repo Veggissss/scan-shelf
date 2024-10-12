@@ -5,7 +5,9 @@
 }
 
 h1 {
+  font-weight: bold;
   text-align: center;
+  font-size: xx-large;
   margin-bottom: 20px;
 }
 
@@ -15,29 +17,35 @@ h1 {
   gap: 20px;
 }
 
+.folder-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: fit-content;
+  height: 40px;
+  background-color: #f9f9f9;
+  color: #000;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: transform 0.1s;
+  font-size: large;
+}
+
+.folder-title:hover {
+  color: #0070f3;
+}
+
 .folder-item {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
-  transition: transform 0.2s;
+  transition: transform 0.1s;
 }
 
 .folder-item:hover {
-  transform: scale(1.02);
-}
-
-.folder-title {
-  text-align: center;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  color: #000000;
-  transition: color 0.2s;
-}
-
-.folder-title:hover {
-  color: #0056b3;
+  transform: scale(1.01);
 }
 
 .file-list {
