@@ -1,4 +1,4 @@
-name: Build and Push Docker Image (arm32v7)
+name: Frontend Docker Image (arm32v7)
 
 on:
   workflow_dispatch:  # Manual triggering
