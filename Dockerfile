@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM arm32v7/node:alpine AS build
+FROM arm32v7/node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --verbose

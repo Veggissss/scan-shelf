@@ -1,4 +1,4 @@
-FROM arm32v7/node:alpine
+FROM arm32v7/node:20-alpine
 ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
