@@ -38,9 +38,10 @@ There is 1000 free scans monthly, so for personal use this should be sufficient,
 2. `npm run launch` will build and run the backend and the frontend concurrently.
 3. It can now be accessed on `localhost:3000`
 4. Add your book folders and `.EPub` files inside the `server/public` folder, like shown in the [backend](#backend) section.
-5. You can install the website as a PWA and add it to the home screen on IOS.
+5. You can now install the website as a PWA and add it to the home screen on IOS.
+6. Navigate to the `settings` page on the site and change the `API Host` field, to be the server address: `http://localhost:3001`
 
-When accessing the application from another computer that is not hosting it, you need to set the server API hostname in the settings page. This allows the frontend to be independent from specific backend instances. The project is intended to be hosted locally and can be accessed from outside by port forwarding or preferably by setting up a VPN to achieve the smallest attack surface.
+The project is intended to be hosted locally and can be accessed from outside the network by port forwarding or preferably by setting up a VPN to achieve the smallest attack surface.
 
 ## Running using Docker
 There are `arm32`-based docker containers available on [DockerHub](https://hub.docker.com/r/veggissss/scan-shelf).
