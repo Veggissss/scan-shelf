@@ -1,10 +1,19 @@
 "use client";
 import { Suspense, use } from "react";
-const isMockEnviorment = process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
+
+// Use correct path and mock when deployed to GitHub Pages
+const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
+const path = isPageConfig ? '/scan-shelf//mockServiceWorker.js' : '/mockServiceWorker.js';
+
+const isMockEnviorment = process.env.NODE_ENV === "development" || isPageConfig;
 const mockingEnabledPromise =
     typeof window !== "undefined" && isMockEnviorment
         ? import("../../mocks/worker").then(async ({ worker }) => {
-            await worker.start();
+            await worker.start({
+                serviceWorker: {
+                    url: path
+                }
+            });
         })
         : Promise.resolve();
 
