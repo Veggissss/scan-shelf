@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:pages": "NEXT_CONFIG=pages next build",
+    "build:pages": "NEXT_PUBLIC_CONFIG=pages next build",
     "start": "next start",
     "lint": "next lint",
     "server": "cd server && npm start",

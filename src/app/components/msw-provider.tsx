@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, use } from "react";
-const isMockEnviorment = process.env.NODE_ENV === "development" || process.env.NEXT_CONFIG === 'pages';
+const isMockEnviorment = process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_CONFIG === 'pages';
 const mockingEnabledPromise =
     typeof window !== "undefined" && isMockEnviorment
         ? import("../../mocks/worker").then(async ({ worker }) => {
