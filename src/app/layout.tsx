@@ -21,8 +21,9 @@ export const metadata: Metadata = {
   description: "An EPUB OCR reader app",
 };
 
-// Enable server side mocking
-if (process.env.NEXT_RUNTIME === "nodejs") {
+const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
+const isDevOrTestEnv = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
+if (isPageConfig || isDevOrTestEnv) {
   server.listen();
 }
 
