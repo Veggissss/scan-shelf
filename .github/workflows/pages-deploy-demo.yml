@@ -1,7 +1,9 @@
-name: Deploy Next.js PWA site to GitHub Pages
+name: Deploy demo site using mock data to GitHub Pages
 
 on:
-  # Allow manual triggering from the GitHub Actions tab
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -46,7 +48,7 @@ jobs:
         run: npm install
 
       - name: Build Next.js Project
-        run: npm run build:static
+        run: npm run build:pages
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3

@@ -11,9 +11,9 @@ const nextConfig = {
 
 const nextPagesConfig = {
   reactStrictMode: true, // Enable React strict mode for better error handling
+  trailingSlash: true, // Ensures all routes are exported with a trailing slash
 
   output: 'export',
-  trailingSlash: true, // Ensures all routes are exported with a trailing slash
 
   // Asset directory for the static export
   images: {

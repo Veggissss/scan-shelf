@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
 import Header from "./components/Header";
+import { server } from "./../mocks/server";
+import { MSWProvider } from "./components/msw-provider";
+import "./globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,6 +21,11 @@ export const metadata: Metadata = {
   description: "An EPUB OCR reader app",
 };
 
+// Enable server side mocking
+if (process.env.NEXT_RUNTIME === "nodejs") {
+  server.listen();
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,7 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        {children}
+        <MSWProvider>{children}</MSWProvider>
       </body>
     </html>
   );

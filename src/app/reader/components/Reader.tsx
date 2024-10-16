@@ -78,8 +78,9 @@ const Reader: React.FC = () => {
 
         // Register image hooks to capture snippets
         rendition.hooks.content.register((content: Section) => {
-            const images = content.document.querySelectorAll('img');
-            images.forEach(img => {
+            const images = content.document.querySelectorAll('img, image');
+            images.forEach(image => {
+                const img = image as HTMLImageElement;
                 let isDragging = false;
 
                 // Mouse events
