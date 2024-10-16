@@ -3,7 +3,7 @@ import { Suspense, use } from "react";
 
 // Use correct path and mock when deployed to GitHub Pages
 const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
-const path = isPageConfig ? '/scan-shelf//mockServiceWorker.js' : '/mockServiceWorker.js';
+const path = isPageConfig ? '/scan-shelf/mockServiceWorker.js' : '/mockServiceWorker.js';
 
 const isMockEnviorment = process.env.NODE_ENV === "development" || isPageConfig;
 const mockingEnabledPromise =
