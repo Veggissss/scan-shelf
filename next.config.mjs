@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 import withPWA from 'next-pwa';
 
-const isPageConfig = process.env.NEXT_CONFIG === 'pages';
+const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
 const path = isPageConfig ? '/scan-shelf' : '';
 
 const nextConfig = {
