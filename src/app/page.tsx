@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import './shelf.css';
 import useLocalStorageState from 'use-local-storage-state';
+import { basePath } from './basePath';
+import { defaultSettings } from './default.config';
+import './shelf.css';
 
 
 interface Folder {
@@ -15,14 +17,14 @@ function ShelfPage() {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
 
   const [apiHost] = useLocalStorageState<string>('apiHost', {
-    defaultValue: 'http://localhost:3001',
+    defaultValue: defaultSettings.API_HOST,
   });
 
   const FOLDERS_API_PATH = `${apiHost}/api/folders`;
   const THUMBNAIL_API_PATH = `${apiHost}/api/thumbnail`;
 
   useEffect(() => {
-    const fetchFolders = async () => {
+    async function fetchFolders() {
       try {
         const response = await fetch(FOLDERS_API_PATH);
         const data: Folder[] = await response.json();
@@ -34,7 +36,7 @@ function ShelfPage() {
             return numA - numB;
           });
         });
-        
+
         setFolders(data);
       } catch (error) {
         console.error("Error fetching folders:", error);
@@ -42,17 +44,11 @@ function ShelfPage() {
     };
 
     fetchFolders();
-  }, []);
+  }, [FOLDERS_API_PATH]);
 
-  
   const handleFolderClick = (folderName: string) => {
     setSelectedFolder(selectedFolder === folderName ? null : folderName);
   };
-
-  // Fetch thumbnails for files in selected folder
-  useEffect(() => {
-
-  }, [selectedFolder, folders]);
 
   return (
     <div className="shelf-container">
@@ -67,8 +63,8 @@ function ShelfPage() {
               <ul className="file-list">
                 {folder.files.map((fileName) => (
                   <li key={fileName} className="folder-item">
-                    <a href={`/reader?filePath=${encodeURIComponent(folder.folderName + "/" + fileName)}`}>
-                      <img src={`${THUMBNAIL_API_PATH}/${selectedFolder}/${fileName}`} alt={fileName} className="thumbnail"/>
+                    <a href={`${basePath}/reader?filePath=${encodeURIComponent(folder.folderName + "/" + fileName)}`}>
+                      <img src={`${THUMBNAIL_API_PATH}/${selectedFolder}/${fileName}`} alt={fileName} className="thumbnail" />
                       <p>{fileName}</p>
                     </a>
                   </li>

@@ -1,6 +1,5 @@
 import { http, HttpResponse } from "msw";
-const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
-const basePath = isPageConfig ? '/scan-shelf' : '';
+import { basePath } from "../app/basePath";
 
 export const handlers = [
     // Main page folder overview

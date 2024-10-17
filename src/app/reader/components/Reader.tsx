@@ -8,6 +8,7 @@ import SnippetViewer from './SnippetViewer';
 import ReaderInformation from './ReaderInformation';
 import { defaultSettings } from '../../default.config';
 import Section from 'epubjs/types/section';
+import { basePath } from '@/app/basePath';
 
 interface Snippet {
     dataUrl: string;
@@ -25,7 +26,7 @@ const Reader: React.FC = () => {
     const searchParams = useSearchParams();
     const FILE_PATH = searchParams.get('filePath');
 
-    const [, setCurrentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader?filePath=${FILE_PATH || ''} ` });
+    const [, setCurrentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `${basePath}/reader?filePath=${FILE_PATH || ''} ` });
 
     const [location, setLocation] = useLocalStorageState(`persist-location-${FILE_PATH}`, { defaultValue: '0' });
     const [pageDisplay, setPageDisplay] = useState('Reading n/a');
@@ -130,7 +131,7 @@ const Reader: React.FC = () => {
                         setLocation(loc);
 
                         // Update currently reading
-                        setCurrentlyReading(`/reader?filePath=${FILE_PATH || ''}`);
+                        setCurrentlyReading(`${basePath}/reader?filePath=${FILE_PATH || ''}`);
 
                         if (rendition && toc) {
                             const start = rendition.location.start;

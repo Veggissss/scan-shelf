@@ -3,10 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import useLocalStorageState from 'use-local-storage-state';
+import { basePath } from '../basePath';
 import './header.css';
 
 const Header: React.FC = () => {
-  const [currentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader`});
+  const [currentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader` });
 
   return (
     <header>
@@ -16,7 +17,7 @@ const Header: React.FC = () => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <a href={currentlyReading}>Reading</a>
+            <a href={basePath + currentlyReading}>Reading</a>
           </li>
           <li>
             <Link href="/settings">Settings</Link>

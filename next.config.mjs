@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 import withPWA from 'next-pwa';
-
-const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
-const path = isPageConfig ? '/scan-shelf' : '';
+import { basePath, isPageConfig } from './src/app/basePath';
 
 const nextConfig = {
   reactStrictMode: true,
@@ -21,12 +19,8 @@ const nextPagesConfig = {
   },
 
   // Additional configuration for base path if hosted on GitHub Pages
-  basePath: path,
-  assetPrefix: `${path}/`,
-  publicRuntimeConfig: {
-    basePath: path,
-    assetPrefix: `${path}/`,
-  },
+  basePath: basePath,
+  assetPrefix: `./`,
 
   // Customize Webpack for any additional modifications
   webpack: (config) => {
