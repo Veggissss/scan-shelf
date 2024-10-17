@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 import withPWA from 'next-pwa';
-import { basePath, isPageConfig } from './src/app/basePath';
+
+const isPagesConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
+const basePath = isPagesConfig ? '/scan-shelf' : '';
 
 const nextConfig = {
   reactStrictMode: true,
@@ -29,7 +31,7 @@ const nextPagesConfig = {
   },
 };
 
-const appliedConfig = isPageConfig ? nextPagesConfig : nextConfig;
+const appliedConfig = isPagesConfig ? nextPagesConfig : nextConfig;
 export default withPWA({
   dest: 'public', // Destination for service worker and related files
   disable: process.env.NODE_ENV === 'development', // Disable in development mode
