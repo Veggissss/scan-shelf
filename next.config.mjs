@@ -22,7 +22,6 @@ const nextPagesConfig = {
 
   // Additional configuration for base path if hosted on GitHub Pages
   basePath: basePath,
-  assetPrefix: `./`,
 
   // Customize Webpack for any additional modifications
   webpack: (config) => {
