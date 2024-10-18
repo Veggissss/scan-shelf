@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import Header from "./components/Header";
 import { server } from "./../mocks/server";
 import { MSWProvider } from "./components/msw-provider";
+import { isPagesConfig, isDevOrTestEnv } from "./env.config";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -21,9 +22,7 @@ export const metadata: Metadata = {
   description: "An EPUB OCR reader app",
 };
 
-const isPageConfig = process.env.NEXT_PUBLIC_DEPLOY_ENVIRONMENT === 'pages';
-const isDevOrTestEnv = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
-if (isPageConfig || isDevOrTestEnv) {
+if (isPagesConfig || isDevOrTestEnv) {
   server.listen();
 }
 

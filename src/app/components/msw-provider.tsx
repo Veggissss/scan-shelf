@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, use } from "react";
-import { basePath, isPagesConfig as isPagesConfig } from "../basePath";
+import { basePath, isPagesConfig as isPagesConfig } from "../env.config";
 
 // Use correct path and mock when deployed to GitHub Pages
 const isMockEnvironment = process.env.NODE_ENV === "development" || isPagesConfig;

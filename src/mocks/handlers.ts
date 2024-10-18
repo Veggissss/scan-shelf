@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { basePath } from "../app/basePath";
+import { basePath } from "../app/env.config";
 
 export const handlers = [
     // Main page folder overview

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import useLocalStorageState from 'use-local-storage-state';
-import { basePath } from '../basePath';
+import { basePath } from '../env.config';
 import './header.css';
 
 const Header: React.FC = () => {

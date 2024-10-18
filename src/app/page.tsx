@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
-import { basePath } from './basePath';
+import { basePath } from './env.config';
 import { defaultSettings } from './default.config';
 import './shelf.css';
 

@@ -7,6 +7,8 @@ const basePath = isPagesConfig ? '/scan-shelf' : '';
 const nextConfig = {
   reactStrictMode: true,
   trailingSlash: true,
+
+  basePath: ''
 };
 
 const nextPagesConfig = {
