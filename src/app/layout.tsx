@@ -3,8 +3,7 @@ import localFont from "next/font/local";
 import Header from "./components/Header";
 import { server } from "./../mocks/server";
 import { MSWProvider } from "./components/msw-provider";
-import { isPagesConfig, isDevOrTestEnv, basePath } from "./env.config";
-import manifest from "./manifest";
+import { isPagesConfig, isDevOrTestEnv } from "./env.config";
 import "./globals.css";
 
 const geistSans = localFont({
