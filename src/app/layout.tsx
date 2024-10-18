@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import Header from "./components/Header";
 import { server } from "./../mocks/server";
 import { MSWProvider } from "./components/msw-provider";
-import { isPagesConfig, isDevOrTestEnv } from "./env.config";
+import { isPagesConfig, isDevOrTestEnv, basePath } from "./env.config";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href={`${basePath}/manifest.json`} />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
