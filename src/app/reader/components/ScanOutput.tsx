@@ -7,12 +7,12 @@ interface ScanOutputProps {
 
 const ScanOutput: React.FC<ScanOutputProps> = ({ text, dictionaryLookup }) => (
   <div className="scan-output">
-    {text.split('\n').map((word, index) => (
-      <h1 key={index}>
+    {text && text.split('\n').map((word, index) => (
+      <p key={index}>
         <a href={`${dictionaryLookup}${word}`} target="_blank" rel="noopener noreferrer">
           {word}
         </a>
-      </h1>
+      </p>
     ))}
   </div>
 );

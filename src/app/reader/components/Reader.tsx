@@ -31,7 +31,7 @@ const Reader: React.FC = () => {
     const [pageDisplay, setPageDisplay] = useState('Reading n/a');
     const toc = useRef<NavItem[]>([]);
     const [rendition, setRendition] = useState<Rendition>();
-    const [text, setText] = useState('Scanned\nCharacters\nOutput!');
+    const [ocrOutput, setOcrOutput] = useLocalStorageState("ocrOutput", { defaultValue: [defaultSettings.OCR_PLACEHOLDER_TEXT] });
     const [snippet, setSnippet] = useState<Snippet | null>(null);
     const snippetRef = useRef<Snippet | null>(null);
 
@@ -45,10 +45,12 @@ const Reader: React.FC = () => {
         })
             .then(response => response.json())
             .then(data => {
-                setText(data.error || data.text);
+                ocrOutput.push(data.error || data.text)
+                setOcrOutput(ocrOutput);
             })
             .catch(error => {
-                setText(error.message);
+                ocrOutput.push(error.message);
+                setOcrOutput(ocrOutput);
             });
     };
 
@@ -115,7 +117,7 @@ const Reader: React.FC = () => {
 
     return (
         <div>
-            <OCROutput text={text} dictionaryLookup={dictionaryLookup} />
+            <OCROutput text={ocrOutput[ocrOutput.length - 1]} dictionaryLookup={dictionaryLookup} />
             <div style={{ height: '95vh' }}>
                 <ReactReader
                     title={""}

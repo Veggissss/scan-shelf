@@ -6,7 +6,7 @@ interface ReaderInformationProps {
 
 const ReaderInformation: React.FC<ReaderInformationProps> = ({ pageDisplay }) => (
     <div className="reader-information">
-        <h1>{pageDisplay}</h1>
+        <p>{pageDisplay}</p>
     </div>
 );
 

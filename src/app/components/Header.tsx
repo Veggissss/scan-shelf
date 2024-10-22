@@ -20,6 +20,9 @@ const Header: React.FC = () => {
             <a href={basePath + currentlyReading}>Reading</a>
           </li>
           <li>
+            <Link href="/history">History</Link>
+          </li>
+          <li>
             <Link href="/settings">Settings</Link>
           </li>
         </ul>

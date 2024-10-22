@@ -4,4 +4,5 @@ export const defaultSettings = {
     SNIPPET_WIDTH: 140,
     SNIPPET_HEIGHT: 200,
     IS_LTR: true,
+    OCR_PLACEHOLDER_TEXT: 'Scanned\nCharacters\nOutput!',
 };

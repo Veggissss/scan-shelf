@@ -34,7 +34,7 @@ const Settings = () => {
     }
 
     return (
-        <div className="settings-container">
+        <div className="info-container">
             <h1>Settings</h1>
 
             <div className="settings-group">

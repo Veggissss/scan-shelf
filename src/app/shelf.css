@@ -4,13 +4,6 @@
   margin: 0 auto;
 }
 
-h1 {
-  font-weight: bold;
-  text-align: center;
-  font-size: xx-large;
-  margin-bottom: 20px;
-}
-
 .folders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
