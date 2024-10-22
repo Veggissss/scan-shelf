@@ -24,7 +24,7 @@ const Settings = () => {
 
             <div>
                 <div className="ocr-output">
-                    {ocrOutput.reverse().map((text, index) => (
+                    {ocrOutput.map((text, index) => (
                         <div key={index} className='ocr-item'>
                             <ScanOutput text={text} dictionaryLookup={dictionaryLookup}></ScanOutput>
                             <button className='remove-button' onClick={() => removeFromHistory(index)}>Remove</button>

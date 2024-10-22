@@ -45,11 +45,11 @@ const Reader: React.FC = () => {
         })
             .then(response => response.json())
             .then(data => {
-                ocrOutput.push(data.error || data.text)
+                ocrOutput.unshift(data.error || data.text);
                 setOcrOutput(ocrOutput);
             })
             .catch(error => {
-                ocrOutput.push(error.message);
+                ocrOutput.unshift(error.message);
                 setOcrOutput(ocrOutput);
             });
     };
@@ -117,7 +117,7 @@ const Reader: React.FC = () => {
 
     return (
         <div>
-            <OCROutput text={ocrOutput[ocrOutput.length - 1]} dictionaryLookup={dictionaryLookup} />
+            <OCROutput text={ocrOutput[0]} dictionaryLookup={dictionaryLookup} />
             <div style={{ height: '95vh' }}>
                 <ReactReader
                     title={""}
