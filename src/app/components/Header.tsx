@@ -16,7 +16,7 @@ const Header: React.FC = () => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href={currentlyReading}>History</Link>
+            <Link href={currentlyReading}>Reading</Link>
           </li>
           <li>
             <Link href="/history">History</Link>
