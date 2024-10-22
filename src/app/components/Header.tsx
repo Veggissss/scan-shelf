@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import useLocalStorageState from 'use-local-storage-state';
-import { basePath } from '../env.config';
 import './header.css';
 
 const Header: React.FC = () => {
@@ -17,7 +16,7 @@ const Header: React.FC = () => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <a href={basePath + currentlyReading}>Reading</a>
+            <Link href={currentlyReading}>History</Link>
           </li>
           <li>
             <Link href="/history">History</Link>
