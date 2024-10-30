@@ -66,7 +66,10 @@ app.get('/api/thumbnail/:folderName/:fileName', (req, res) => {
     const zipEntries = zip.getEntries(); // Get all entries in the ZIP
 
     // Filter the entries to find the first .jpg file
-    const jpgEntry = zipEntries.find(entry => entry.entryName.endsWith('.jpg'));
+    const supportedExtensions = ['.jpg', '.jpeg', '.png', '.bmp'];
+    const jpgEntry = zipEntries.find(entry =>
+      supportedExtensions.some(ext => entry.entryName.toLowerCase().endsWith(ext))
+    );
 
     if (!jpgEntry) {
       return res.status(404).send('No JPG image found in EPUB.');
