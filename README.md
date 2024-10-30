@@ -35,7 +35,7 @@ There is 1000 free scans monthly, so for personal use this should be sufficient,
 
 ## Running front- and backend locally
 1. `npm run setup` for installing dependencies for server and the react app.
-2. `npm run launch` will build and run the backend and the frontend concurrently.
+2. `npm run local` will build and run the backend and the frontend concurrently.
 3. It can now be accessed on `localhost:3000`
 4. Add your book folders and `.EPub` files inside the `server/public` folder, like shown in the [backend](#backend) section.
 5. You can now install the website as a PWA and add it to the home screen on IOS.

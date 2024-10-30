@@ -1,5 +1,6 @@
 "use client";
 
+import Slider from '@mui/material/Slider';
 import useLocalStorageState from 'use-local-storage-state';
 import { defaultSettings } from '../default.config';
 import './settings.css';
@@ -60,24 +61,26 @@ const Settings = () => {
             </div>
 
             <div className="settings-group">
-                <label htmlFor="snippetWidth">Snippet Width (px)</label>
-                <input
-                    id="snippetWidth"
-                    type="number"
+                <label htmlFor='snippetWidth-slider'>Snippet Width ({snippetWidth}px)</label>
+                <Slider
+                    id='snippetWidth-slider'
                     value={snippetWidth}
-                    onChange={(e) => setSnippetWidth(Number(e.target.value))}
-                    placeholder="Enter snippet width"
+                    onChange={(_, newValue) => setSnippetWidth(newValue as number)}
+                    min={50}
+                    max={500}
+                    step={5}
                 />
             </div>
 
             <div className="settings-group">
-                <label htmlFor="snippetHeight">Snippet Height (px)</label>
-                <input
-                    id="snippetHeight"
-                    type="number"
+                <label htmlFor='snippetHeight-slider'>Snippet Height ({snippetHeight}px)</label>
+                <Slider
+                    id='snippetHeight-slider'
                     value={snippetHeight}
-                    onChange={(e) => setSnippetHeight(Number(e.target.value))}
-                    placeholder="Enter snippet height"
+                    onChange={(_, newValue) => setSnippetHeight(newValue as number)}
+                    min={50}
+                    max={500}
+                    step={5}
                 />
             </div>
 
