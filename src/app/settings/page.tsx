@@ -3,9 +3,18 @@
 import Slider from '@mui/material/Slider';
 import useLocalStorageState from 'use-local-storage-state';
 import { defaultSettings } from '../default.config';
+import SnippetViewer from '../reader/components/SnippetViewer';
+import Snippet from '../reader/components/Snippet';
 import './settings.css';
 
 const Settings = () => {
+    const exampleSnippet: Snippet = {
+        // example grey-black gradient image
+        dataUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGElEQVQImQXBAQEAAAABoDzy/xyVtoNgcBwaApF5Ib6dAAAAAElFTkSuQmCC',
+        left: 0,
+        top: 20,
+    };
+
     const [apiHost, setApiHost] = useLocalStorageState<string>('apiHost', {
         defaultValue: defaultSettings.API_HOST,
     });
@@ -47,9 +56,7 @@ const Settings = () => {
                     onChange={(e) => setApiHost(e.target.value)}
                     placeholder="Enter API host"
                 />
-            </div>
 
-            <div className="settings-group">
                 <label htmlFor="dictionaryLookup">Dictionary Lookup URL</label>
                 <input
                     id="dictionaryLookup"
@@ -58,33 +65,27 @@ const Settings = () => {
                     onChange={(e) => setDictionaryLookup(e.target.value)}
                     placeholder="Enter dictionary lookup URL"
                 />
-            </div>
 
-            <div className="settings-group">
                 <label htmlFor='snippetWidth-slider'>Snippet Width ({snippetWidth}px)</label>
                 <Slider
                     id='snippetWidth-slider'
                     value={snippetWidth}
                     onChange={(_, newValue) => setSnippetWidth(newValue as number)}
                     min={50}
-                    max={500}
+                    max={300}
                     step={5}
                 />
-            </div>
 
-            <div className="settings-group">
                 <label htmlFor='snippetHeight-slider'>Snippet Height ({snippetHeight}px)</label>
                 <Slider
                     id='snippetHeight-slider'
                     value={snippetHeight}
                     onChange={(_, newValue) => setSnippetHeight(newValue as number)}
                     min={50}
-                    max={500}
+                    max={300}
                     step={5}
                 />
-            </div>
 
-            <div className="settings-group">
                 <label htmlFor="isRTL">Left-to-Right Text</label>
                 <input
                     id="isRTL"
@@ -92,12 +93,21 @@ const Settings = () => {
                     checked={isLTR}
                     onChange={(e) => setIsLTR(e.target.checked)}
                 />
-            </div>
 
-            <div className="button-container">
                 <button className="reset-button" onClick={resetSettings}>
                     Reset to Default
                 </button>
+
+                <div style={{ position: "relative", overflow: "hidden", height: snippetHeight }}>
+                    <SnippetViewer
+                        snippet={exampleSnippet}
+                        snippetWidth={snippetWidth}
+                        snippetHeight={snippetHeight}
+                        onScan={() => { }}
+                        onClearSnippet={() => { }}
+                    >
+                    </SnippetViewer>
+                </div>
             </div>
         </div>
     );

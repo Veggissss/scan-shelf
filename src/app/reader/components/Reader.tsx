@@ -8,12 +8,7 @@ import SnippetViewer from './SnippetViewer';
 import ReaderInformation from './ReaderInformation';
 import { defaultSettings } from '../../default.config';
 import Section from 'epubjs/types/section';
-
-interface Snippet {
-    dataUrl: string;
-    left: number;
-    top: number;
-}
+import Snippet from './Snippet';
 
 const Reader: React.FC = () => {
     const [apiHost] = useLocalStorageState('apiHost', { defaultValue: defaultSettings.API_HOST });
