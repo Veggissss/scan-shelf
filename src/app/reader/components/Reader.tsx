@@ -16,6 +16,7 @@ const Reader: React.FC = () => {
     const [snippetWidth] = useLocalStorageState('snippetWidth', { defaultValue: defaultSettings.SNIPPET_WIDTH });
     const [snippetHeight] = useLocalStorageState('snippetHeight', { defaultValue: defaultSettings.SNIPPET_HEIGHT });
     const [isLTR] = useLocalStorageState('isLTR', { defaultValue: defaultSettings.IS_LTR });
+    const [backgroundColor] = useLocalStorageState('backgroundColor', { defaultValue: defaultSettings.BACKGROUND_COLOR });
 
     const searchParams = useSearchParams();
     const FILE_PATH = searchParams.get('filePath');
@@ -147,7 +148,7 @@ const Reader: React.FC = () => {
                         spread: 'none',
                     }}
                     readerStyles={darkReaderStyle}
-                    epubViewStyles={{ view: { backgroundColor: 'black' }, viewHolder: { backgroundColor: 'black' } }}
+                    epubViewStyles={{ view: { backgroundColor: backgroundColor }, viewHolder: { backgroundColor: 'black' } }}
                 />
             </div>
             <SnippetViewer
@@ -191,7 +192,7 @@ const darkReaderStyle: IReactReaderStyle = {
     },
     tocButtonBar: {
         ...ReactReaderStyle.tocButtonBar,
-        background: '#fff',
+        background: 'white',
     },
     tocButton: {
         ...ReactReaderStyle.tocButton,

@@ -35,12 +35,17 @@ const Settings = () => {
         defaultValue: defaultSettings.IS_LTR,
     });
 
+    const [backgroundColor, setBackgroundColor] = useLocalStorageState<string>('backgroundColor', {
+        defaultValue: defaultSettings.BACKGROUND_COLOR,
+    });
+
     function resetSettings() {
         setApiHost(defaultSettings.API_HOST);
         setDictionaryLookup(defaultSettings.DICTIONARY_LOOKUP);
         setSnippetWidth(defaultSettings.SNIPPET_WIDTH);
         setSnippetHeight(defaultSettings.SNIPPET_HEIGHT);
         setIsLTR(defaultSettings.IS_LTR);
+        setBackgroundColor(defaultSettings.BACKGROUND_COLOR);
     }
 
     return (
@@ -66,6 +71,28 @@ const Settings = () => {
                     placeholder="Enter dictionary lookup URL"
                 />
 
+                <br />
+                <br />
+
+                <label htmlFor="isRTL">Left-to-Right Text</label>
+                <input
+                    id="isRTL"
+                    type="checkbox"
+                    checked={isLTR}
+                    onChange={(e) => setIsLTR(e.target.checked)}
+                />
+
+                <label htmlFor="backgroundColor">Background Color</label>
+                <input
+                    id="backgroundColor"
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(e) => setBackgroundColor(e.target.value)}
+                />
+
+                <br />
+                <br />
+
                 <label htmlFor='snippetWidth-slider'>Snippet Width ({snippetWidth}px)</label>
                 <Slider
                     id='snippetWidth-slider'
@@ -84,14 +111,6 @@ const Settings = () => {
                     min={50}
                     max={300}
                     step={5}
-                />
-
-                <label htmlFor="isRTL">Left-to-Right Text</label>
-                <input
-                    id="isRTL"
-                    type="checkbox"
-                    checked={isLTR}
-                    onChange={(e) => setIsLTR(e.target.checked)}
                 />
 
                 <button className="reset-button" onClick={resetSettings}>

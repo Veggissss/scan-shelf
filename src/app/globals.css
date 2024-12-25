@@ -56,6 +56,11 @@ input[type='checkbox'] {
   }
 }
 
+input[type='color'] {
+  width: 60px;
+  height: 60px;
+}
+
 .scan-output {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
