@@ -147,8 +147,8 @@ const Reader: React.FC = () => {
                     isRTL={!isLTR}
                     epubInitOptions={{ openAs: 'epub' }}
                     epubOptions={{
-                        allowPopups: false,
-                        allowScriptedContent: false,
+                        allowPopups: true,
+                        allowScriptedContent: true,
                         manager: 'default',
                         flow: 'paginated',
                         height: '100vh',
