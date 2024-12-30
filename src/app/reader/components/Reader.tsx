@@ -118,7 +118,15 @@ const Reader: React.FC = () => {
                 <ReactReader
                     title={""}
                     getRendition={_rendition => {
-                        _rendition.themes.default({ img: { display: 'block', margin: '0 auto' } });
+                        _rendition.themes.default({
+                            img: {
+                                display: 'block',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -55%)',
+                            },
+                        });
                         setRendition(_rendition)
                     }}
                     url={FILE_PATH ? `${apiHost}/${FILE_PATH}` : '/test.epub'}
@@ -139,8 +147,8 @@ const Reader: React.FC = () => {
                     isRTL={!isLTR}
                     epubInitOptions={{ openAs: 'epub' }}
                     epubOptions={{
-                        allowPopups: true,
-                        allowScriptedContent: true,
+                        allowPopups: false,
+                        allowScriptedContent: false,
                         manager: 'default',
                         flow: 'paginated',
                         height: '100vh',
@@ -148,7 +156,7 @@ const Reader: React.FC = () => {
                         spread: 'none',
                     }}
                     readerStyles={darkReaderStyle}
-                    epubViewStyles={{ view: { backgroundColor: backgroundColor }, viewHolder: { backgroundColor: 'black' } }}
+                    epubViewStyles={{ view: { backgroundColor: backgroundColor }, viewHolder: {} }}
                 />
             </div>
             <SnippetViewer
@@ -184,7 +192,7 @@ const darkReaderStyle: IReactReaderStyle = {
     },
     tocArea: {
         ...ReactReaderStyle.tocArea,
-        background: '#111',
+        background: 'black',
     },
     tocButtonExpanded: {
         ...ReactReaderStyle.tocButtonExpanded,
