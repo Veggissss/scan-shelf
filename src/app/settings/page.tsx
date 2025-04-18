@@ -19,6 +19,10 @@ const Settings = () => {
         defaultValue: defaultSettings.API_HOST,
     });
 
+    const [zoomFactor, setZoomFactor] = useLocalStorageState<number>('zoomFactor', {
+        defaultValue: defaultSettings.ZOOM_FACTOR,
+    });
+
     const [dictionaryLookup, setDictionaryLookup] = useLocalStorageState<string>('dictionaryLookup', {
         defaultValue: defaultSettings.DICTIONARY_LOOKUP,
     });
@@ -46,6 +50,7 @@ const Settings = () => {
         setSnippetHeight(defaultSettings.SNIPPET_HEIGHT);
         setIsLTR(defaultSettings.IS_LTR);
         setBackgroundColor(defaultSettings.BACKGROUND_COLOR);
+        setZoomFactor(defaultSettings.ZOOM_FACTOR);
     }
 
     return (
@@ -111,6 +116,16 @@ const Settings = () => {
                     min={50}
                     max={300}
                     step={5}
+                />
+
+                <label htmlFor='snippetHeight-slider'>Zoom Scaling ({zoomFactor}x)</label>
+                <Slider
+                    id='snippetHeight-slider'
+                    value={zoomFactor}
+                    onChange={(_, newValue) => setZoomFactor(newValue as number)}
+                    min={0.5}
+                    max={4}
+                    step={0.1}
                 />
 
                 <button className="reset-button" onClick={resetSettings}>

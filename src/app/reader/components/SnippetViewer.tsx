@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface Snippet {
-    dataUrl: string;
-    left: number;
-    top: number;
-}
+import Snippet from './Snippet';
 
 interface SnippetViewerProps {
     snippet: Snippet | null;

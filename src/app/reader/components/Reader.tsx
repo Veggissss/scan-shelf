@@ -22,6 +22,7 @@ const Reader: React.FC = () => {
     const FILE_PATH = searchParams.get('filePath');
 
     const [, setCurrentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader?filePath=${FILE_PATH || ''} ` });
+    const [zoomFactor] = useLocalStorageState("zoomFactor", { defaultValue: defaultSettings.ZOOM_FACTOR });
 
     const [location, setLocation] = useLocalStorageState(`persist-location-${FILE_PATH}`, { defaultValue: '0' });
     const [pageDisplay, setPageDisplay] = useState('Reading n/a');
@@ -66,7 +67,17 @@ const Reader: React.FC = () => {
 
             canvas.width = snippetWidth;
             canvas.height = snippetHeight;
-            ctx.drawImage(img, clickX - snippetWidth / 2, clickY - snippetHeight / 2, snippetWidth, snippetHeight, 0, 0, snippetWidth, snippetHeight);
+
+            const sourceWidth = snippetWidth / zoomFactor;
+            const sourceHeight = snippetHeight / zoomFactor;
+            const sourceX = clickX - sourceWidth / 2;
+            const sourceY = clickY - sourceHeight / 2;
+
+            ctx.drawImage(
+                img,
+                sourceX, sourceY, sourceWidth, sourceHeight, // source (zoomed-in area)
+                0, 0, snippetWidth, snippetHeight             // destination on canvas
+            );
 
             const dataUrl = canvas.toDataURL('image/png');
             const updatedSnippet = { dataUrl, left: e.clientX - snippetWidth / 2, top: e.clientY - snippetHeight / 2 };
@@ -109,7 +120,7 @@ const Reader: React.FC = () => {
                 };
             });
         });
-    }, [rendition, snippetWidth, snippetHeight, setCurrentlyReading, FILE_PATH]);
+    }, [rendition, snippetWidth, snippetHeight, setCurrentlyReading, FILE_PATH, zoomFactor]);
 
     return (
         <div>
