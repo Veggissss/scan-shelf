@@ -1,55 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { NavItem, Rendition } from 'epubjs';
-import { IReactReaderStyle, ReactReader, ReactReaderStyle } from 'react-reader';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import useLocalStorageState from 'use-local-storage-state';
-import OCROutput from './ScanOutput';
-import SnippetViewer from './SnippetViewer';
-import ReaderInformation from './ReaderInformation';
-import { defaultSettings } from '../../default.config';
+import { NavItem, Rendition } from 'epubjs';
+import { ReactReader } from 'react-reader';
 import Section from 'epubjs/types/section';
-import Snippet from './Snippet';
+
+import darkReaderStyle from './darkReaderStyle';
+import { useReaderSettings } from '../hooks/useReaderSettings';
+import { useScanRequest } from '../hooks/useScanRequest';
+import OCROutput from './ScanOutput';
+import ReaderInformation from './ReaderInformation';
+import Snippet from '../types/Snippet';
+import SnippetViewer from './SnippetViewer';
+
 
 const Reader: React.FC = () => {
-    const [apiHost] = useLocalStorageState('apiHost', { defaultValue: defaultSettings.API_HOST });
-    const [dictionaryLookup] = useLocalStorageState('dictionaryLookup', { defaultValue: defaultSettings.DICTIONARY_LOOKUP });
-    const [snippetWidth] = useLocalStorageState('snippetWidth', { defaultValue: defaultSettings.SNIPPET_WIDTH });
-    const [snippetHeight] = useLocalStorageState('snippetHeight', { defaultValue: defaultSettings.SNIPPET_HEIGHT });
-    const [isLTR] = useLocalStorageState('isLTR', { defaultValue: defaultSettings.IS_LTR });
-    const [backgroundColor] = useLocalStorageState('backgroundColor', { defaultValue: defaultSettings.BACKGROUND_COLOR });
-
     const searchParams = useSearchParams();
-    const FILE_PATH = searchParams.get('filePath');
+    const filePath = searchParams.get('filePath') ?? '';
+    const {
+        apiHost,
+        dictionaryLookup,
+        snippetWidth,
+        snippetHeight,
+        isLTR,
+        backgroundColor,
+        zoomFactor,
+        location,
+        setLocation,
+        setCurrentlyReading,
+    } = useReaderSettings(filePath);
+    const { ocrOutput, sendScanRequest } = useScanRequest(apiHost);
 
-    const [, setCurrentlyReading] = useLocalStorageState("currentlyReading", { defaultValue: `/reader?filePath=${FILE_PATH || ''} ` });
-    const [zoomFactor] = useLocalStorageState("zoomFactor", { defaultValue: defaultSettings.ZOOM_FACTOR });
-
-    const [location, setLocation] = useLocalStorageState(`persist-location-${FILE_PATH}`, { defaultValue: '0' });
     const [pageDisplay, setPageDisplay] = useState('Reading n/a');
-    const toc = useRef<NavItem[]>([]);
     const [rendition, setRendition] = useState<Rendition>();
-    const [ocrOutput, setOcrOutput] = useLocalStorageState("ocrOutput", { defaultValue: [defaultSettings.OCR_PLACEHOLDER_TEXT] });
     const [snippet, setSnippet] = useState<Snippet | null>(null);
+
+    const toc = useRef<NavItem[]>([]);
     const snippetRef = useRef<Snippet | null>(null);
-
-    const OCR_API_PATH = `${apiHost}/api/ocr`;
-
-    const sendRestRequest = (base64ImageSnippet: string) => {
-        fetch(OCR_API_PATH, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: base64ImageSnippet }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                ocrOutput.unshift(data.error || data.text);
-                setOcrOutput(ocrOutput);
-            })
-            .catch(error => {
-                ocrOutput.unshift(error.message);
-                setOcrOutput(ocrOutput);
-            });
-    };
 
     useEffect(() => {
         if (!rendition) return;
@@ -75,8 +61,10 @@ const Reader: React.FC = () => {
 
             ctx.drawImage(
                 img,
-                sourceX, sourceY, sourceWidth, sourceHeight, // source (zoomed-in area)
-                0, 0, snippetWidth, snippetHeight             // destination on canvas
+                // zoomed-in source area
+                sourceX, sourceY, sourceWidth, sourceHeight,
+                // canvas destination
+                0, 0, snippetWidth, snippetHeight
             );
 
             const dataUrl = canvas.toDataURL('image/png');
@@ -120,7 +108,7 @@ const Reader: React.FC = () => {
                 };
             });
         });
-    }, [rendition, snippetWidth, snippetHeight, setCurrentlyReading, FILE_PATH, zoomFactor]);
+    }, [rendition, snippetWidth, snippetHeight, setCurrentlyReading, filePath, zoomFactor]);
 
     return (
         <div>
@@ -140,19 +128,19 @@ const Reader: React.FC = () => {
                         });
                         setRendition(_rendition)
                     }}
-                    url={FILE_PATH ? `${apiHost}/${FILE_PATH}` : '/test.epub'}
+                    url={filePath ? `${apiHost}/${filePath}` : '/test.epub'}
                     location={location}
                     tocChanged={_toc => (toc.current = _toc)}
                     locationChanged={loc => {
                         setLocation(loc);
 
                         // Update currently reading
-                        setCurrentlyReading(`/reader?filePath=${FILE_PATH || ''}`);
+                        setCurrentlyReading(`/reader?filePath=${filePath || ''}`);
 
                         if (rendition && toc) {
                             const start = rendition.location.start;
                             const currentPage = toc.current.find(item => item.href === start.href);
-                            setPageDisplay(`Reading ${FILE_PATH} ${currentPage ? currentPage.label : 'n/a'}`);
+                            setPageDisplay(`Reading ${filePath} ${currentPage ? currentPage.label : 'n/a'}`);
                         }
                     }}
                     isRTL={!isLTR}
@@ -174,50 +162,12 @@ const Reader: React.FC = () => {
                 snippet={snippet}
                 snippetWidth={snippetWidth}
                 snippetHeight={snippetHeight}
-                onScan={sendRestRequest}
+                onScan={sendScanRequest}
                 onClearSnippet={() => setSnippet(null)}
             />
             <ReaderInformation pageDisplay={pageDisplay} />
         </div>
     );
 };
-
-const darkReaderStyle: IReactReaderStyle = {
-    ...ReactReaderStyle,
-    arrow: {
-        ...ReactReaderStyle.arrow,
-        color: 'white',
-    },
-    arrowHover: {
-        ...ReactReaderStyle.arrowHover,
-        color: '#ccc',
-    },
-    readerArea: {
-        ...ReactReaderStyle.readerArea,
-        backgroundColor: '#000',
-        transition: undefined,
-    },
-    titleArea: {
-        ...ReactReaderStyle.titleArea,
-        color: '#ccc',
-    },
-    tocArea: {
-        ...ReactReaderStyle.tocArea,
-        background: 'black',
-    },
-    tocButtonExpanded: {
-        ...ReactReaderStyle.tocButtonExpanded,
-        background: '#222',
-    },
-    tocButtonBar: {
-        ...ReactReaderStyle.tocButtonBar,
-        background: 'white',
-    },
-    tocButton: {
-        ...ReactReaderStyle.tocButton,
-        color: 'white',
-    },
-}
-
 
 export default Reader;

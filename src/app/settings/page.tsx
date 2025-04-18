@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider';
 import useLocalStorageState from 'use-local-storage-state';
 import { defaultSettings } from '../default.config';
 import SnippetViewer from '../reader/components/SnippetViewer';
-import Snippet from '../reader/components/Snippet';
+import Snippet from '../reader/types/Snippet';
 import './settings.css';
 
 const Settings = () => {

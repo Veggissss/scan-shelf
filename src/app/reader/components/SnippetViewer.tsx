@@ -1,13 +1,5 @@
 import React from 'react';
-import Snippet from './Snippet';
-
-interface SnippetViewerProps {
-    snippet: Snippet | null;
-    snippetWidth: number;
-    snippetHeight: number;
-    onScan: (base64ImageSnippet: string) => void;
-    onClearSnippet: () => void;
-}
+import SnippetViewerProps from '../types/SnippetViewerProps';
 
 const SnippetViewer: React.FC<SnippetViewerProps> = ({ snippet, snippetWidth, snippetHeight, onScan, onClearSnippet }) => {
     if (!snippet) return null;
