@@ -6,20 +6,23 @@ export const handlers = [
     http.get(`*/api/folders`, () => {
         return HttpResponse.json(
             [
-                { "folderName": "Alice", "files": ["alice.epub"] },
-                { "folderName": "Bob", "files": ["vol1.epub", "vol2.epub"] }
+                { "folderName": "Alice", "files": ["test.epub"] },
+                { "folderName": "Bob", "files": ["test.epub", "test.epub", "test.epub"] }
             ]
         )
     }),
 
     // Main page thumbnail request
-    http.get(`*/api/thumbnail/Alice/alice.epub`, () => {
-        return HttpResponse.redirect(`${basePath}/mock_data/img/alice.jpg`);
+    http.get(`*/api/thumbnail/Alice/test.epub`, () => {
+        return HttpResponse.redirect(`${basePath}/mock_data/img/test.png`);
+    }),
+    http.get(`*/api/thumbnail/Bob/test.epub`, () => {
+        return HttpResponse.redirect(`${basePath}/mock_data/img/test.png`);
     }),
 
     // Epub file request
-    http.get(`*/Alice/alice.epub`, () => {
-        return HttpResponse.redirect(`${basePath}/mock_data/files/alice.epub`);
+    http.get(`*/Alice/test.epub`, () => {
+        return HttpResponse.redirect(`${basePath}/mock_data/files/test.epub`);
     }),
 
     // OCR request
