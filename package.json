@@ -1,10 +1,11 @@
 {
   "name": "scan-shelf",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:start": "npm run build && npm run start",
     "build:pages": "NEXT_PUBLIC_DEPLOY_ENVIRONMENT=pages next build",
     "start": "next start",
     "lint": "next lint",

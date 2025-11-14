@@ -7,7 +7,7 @@ export const handlers = [
         return HttpResponse.json(
             [
                 { "folderName": "Alice", "files": ["test.epub"] },
-                { "folderName": "Bob", "files": ["test.epub", "test.epub", "test.epub"] }
+                { "folderName": "Bob", "files": ["test.epub", "test.epub", "test.epub"] },
             ]
         )
     }),
@@ -22,6 +22,9 @@ export const handlers = [
 
     // Epub file request
     http.get(`*/Alice/test.epub`, () => {
+        return HttpResponse.redirect(`${basePath}/mock_data/files/test.epub`);
+    }),
+    http.get(`*/Bob/test.epub`, () => {
         return HttpResponse.redirect(`${basePath}/mock_data/files/test.epub`);
     }),
 
