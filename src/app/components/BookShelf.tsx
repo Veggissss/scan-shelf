@@ -21,9 +21,9 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
 
     const coverWRem = coverWidth / 16;
     const thicknessRem = bookThickness / 16;
-    const minGapRem = 0.8;
+    const minGapRem = 0.2;
     const depthStep = 20;
-    const sideLimit = 2;
+    const sideLimit = 4;
 
     const next = useCallback(() => {
         setActiveIndex(i => (i + 1) % folder.files.length);
@@ -63,8 +63,8 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                 className="relative h-[17rem] flex items-end justify-center overflow-visible"
                 style={{ perspective: '1400px' }}
             >
-
-                <div className="absolute top-6 inset-x-0 text-center">
+                {/* Series Title */}
+                <div className="absolute top-3 inset-x-0 text-center">
                     <h3 className="text-xl font-semibold tracking-wide text-white/90">
                         {folder.folderName}
                     </h3>
@@ -72,7 +72,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
 
                 {/* Shelf */}
                 <div className="absolute bottom-4 w-full">
-                    <div className="h-7 bg-gradient-to-t from-neutral-600 to-neutral-800 shadow-xl" />
+                    <div className="h-7 bg-gradient-to-t from-neutral-600 to-neutral-800" />
                 </div>
 
                 {folder.files.map((fileName, index) => {
@@ -90,10 +90,14 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                         const base = coverWRem / 2;
                         xRem = side * (base + sideIndex * (thicknessRem + minGapRem));
                     }
+                    if (side === 1) {
+                        // Allign the right side
+                        xRem -= 0.6
+                    }
 
                     const translateX = xRem;
                     const translateZ = -sideIndex * depthStep;
-                    const rotateY = isActive ? 0 : (side < 0 ? 85 : -90);
+                    const rotateY = isActive ? 0 : (side < 0 ? 80 : 90);
                     const scale = isActive ? 1 : 0.9;
                     const zIndex = isActive ? 100 : 95 - sideIndex;
 
@@ -105,7 +109,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                             className="absolute bottom-4 left-1/2 origin-bottom cursor-pointer"
                             style={{
                                 transform: `translateX(-50%) translateX(${translateX}rem) translateZ(${translateZ}px)`,
-                                transition: 'transform 600ms cubic-bezier(.25,.8,.25,1)',
+                                transition: 'transform 400ms cubic-bezier(.25,1,.25,1)',
                                 zIndex
                             }}
                             onClick={() => setActiveIndex(index)}
@@ -120,7 +124,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                 >
                                     {/* Front cover  */}
                                     <div
-                                        className="absolute inset-0 shadow-2xl overflow-hidden bg-neutral-950 ring-1 ring-white/10"
+                                        className="absolute inset-0 overflow-hidden"
                                         style={{ transform: `translateZ(${bookThickness / 2}px)` }}
                                     >
                                         {isActive ? (
@@ -138,7 +142,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                             <img
                                                 src={`${THUMBNAIL_API_PATH}/${folder.folderName}/${fileName}`}
                                                 alt={fileName}
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-full object-cover brightness-75 transition-all"
                                                 draggable={false}
                                             />
                                         ) : (
@@ -146,7 +150,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                         )}
 
                                         {isActive && activeLoaded && (
-                                            <div className="absolute inset-0 flex items-end justify-center bg-black/0">
+                                            <div className="absolute inset-0 flex items-end justify-center">
                                                 <a
                                                     href={fileLink}
                                                     className="mb-3 px-3 py-1 text-sm font-semibold bg-blue-600 text-white"
@@ -162,11 +166,11 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                         className="absolute top-0 left-0 h-full bg-gradient-to-b from-neutral-800 to-neutral-950 shadow-inner ring-1 ring-black/30 flex items-center justify-center"
                                         style={{
                                             width: bookThickness,
-                                            transform: `translateX(-${bookThickness / 2}px) rotateY(${side < 0 ? -90 : 90}deg)`
+                                            transform: `translateX(-${bookThickness / 2}px) rotateY(-90deg)`
                                         }}
                                     >
                                         <span
-                                            className="text-[10px] font-semibold tracking-wide text-neutral-200 [writing-mode:vertical-rl] [text-orientation:mixed]"
+                                            className="text-[12px] font-semibold tracking-wide text-neutral-200 [writing-mode:vertical-rl] [text-orientation:mixed]"
                                             style={{ transform: 'rotate(180deg)', whiteSpace: 'nowrap' }}
                                         >
                                             {fileName.replace('.epub', '')}
@@ -176,7 +180,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                             </div>
 
                             {/* Soft shadow on shelf */}
-                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-24 h-4 rounded-full bg-black/90 blur-md opacity-70" />
+                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-24 h-4 rounded-full bg-black/90 blur-md opacity-50 -z-20" />
                         </div>
                     );
                 })}
