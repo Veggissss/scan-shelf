@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
-import Folder from './components/Folder';
 import { defaultSettings } from './default.config';
+import BookShelf from './components/BookShelf';
 import './shelf.css';
 
 interface FolderData {
@@ -11,9 +11,10 @@ interface FolderData {
   files: string[];
 }
 
-function ShelfPage() : React.JSX.Element {
+function ShelfPage(): React.JSX.Element {
   const [folders, setFolders] = useState<FolderData[]>([]);
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState<number>(0);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const [apiHost] = useLocalStorageState<string>('apiHost', {
     defaultValue: defaultSettings.API_HOST,
@@ -36,6 +37,14 @@ function ShelfPage() : React.JSX.Element {
         });
 
         setFolders(data);
+
+        // Dynamically decide initial shelves to render based on viewport height
+        const approxShelfHeight = 300;
+        const initial = Math.min(
+          data.length,
+          Math.max(6, Math.ceil(window.innerHeight / approxShelfHeight) + 2)
+        );
+        setVisibleCount(initial);
       } catch (error) {
         console.error("Error fetching folders:", error);
       }
@@ -44,23 +53,45 @@ function ShelfPage() : React.JSX.Element {
     fetchFolders();
   }, [FOLDERS_API_PATH]);
 
-  const handleFolderClick = (folderName: string) => {
-    setSelectedFolder(selectedFolder === folderName ? null : folderName);
-  };
+  useEffect(() => {
+    // Load more shelves when the sentinel is visible
+    if (!loadMoreRef.current) return;
+    if (visibleCount >= folders.length) return;
+
+    const BATCH_SIZE = 3;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, folders.length));
+        }
+      },
+      { root: null, rootMargin: '400px 0px', threshold: 0 }
+    );
+
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [folders.length, visibleCount]);
+
+  const visibleFolders = folders.slice(0, visibleCount);
 
   return (
     <div className="shelf-container">
       <h1>Scan Shelf Library</h1>
+      <div className="shelf-subtitle italic">
+        <p>
+          {folders.reduce((total, folder) => total + folder.files.length, 0)} books total
+        </p>
+        <p>
+          Showing {visibleFolders.length} of {folders.length} series
+        </p>
+      </div>
       <div className="folders-grid">
-        {folders.map((folder) => (
-          <Folder
-            key={folder.folderName}
-            folder={folder}
-            isSelected={selectedFolder === folder.folderName}
-            onClick={handleFolderClick}
-            apiHost={apiHost}
-          />
+        {visibleFolders.map((folder) => (
+          <BookShelf key={folder.folderName} folder={folder} apiHost={apiHost} />
         ))}
+        <div ref={loadMoreRef} className="w-full h-8" />
       </div>
     </div>
   );
