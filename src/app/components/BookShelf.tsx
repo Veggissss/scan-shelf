@@ -15,8 +15,8 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
     const [loadedCovers, setLoadedCovers] = useState<Record<number, boolean>>({});
     const THUMBNAIL_API_PATH = `${apiHost}/api/thumbnail`;
 
-    const coverWidth = 128;
-    const coverHeight = 192;
+    const coverWidth = 130;
+    const coverHeight = 204;
     const bookThickness = 20;
 
     const coverWRem = coverWidth / 16;
@@ -64,8 +64,8 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                 style={{ perspective: '1400px' }}
             >
                 {/* Series Title */}
-                <div className="absolute top-3 inset-x-0 text-center">
-                    <h3 className="text-xl font-semibold tracking-wide text-white/90">
+                <div className="absolute top-5 inset-x-0 text-center">
+                    <h3 className="text-base font-semibold tracking-wide text-white/90">
                         {folder.folderName}
                     </h3>
                 </div>
@@ -129,12 +129,16 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                     >
                                         {isActive ? (
                                             activeLoaded ? (
-                                                <img
-                                                    src={`${THUMBNAIL_API_PATH}/${folder.folderName}/${fileName}`}
-                                                    alt={fileName}
-                                                    className="w-full h-full object-cover"
-                                                    draggable={false}
-                                                />
+                                                <a
+                                                    href={fileLink}
+                                                >
+                                                    <img
+                                                        src={`${THUMBNAIL_API_PATH}/${folder.folderName}/${fileName}`}
+                                                        alt={fileName}
+                                                        className="w-full h-full object-cover transition-transform hover:scale-95"
+                                                        draggable={false}
+                                                    />
+                                                </a>
                                             ) : (
                                                 <div className="w-full h-full animate-pulse bg-neutral-800" />
                                             )
@@ -147,17 +151,6 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-gradient-to-br from-neutral-850 to-neutral-800" />
-                                        )}
-
-                                        {isActive && activeLoaded && (
-                                            <div className="absolute inset-0 flex items-end justify-center">
-                                                <a
-                                                    href={fileLink}
-                                                    className="mb-3 px-3 py-1 text-sm font-semibold bg-blue-600 text-white"
-                                                >
-                                                    Read
-                                                </a>
-                                            </div>
                                         )}
                                     </div>
 
