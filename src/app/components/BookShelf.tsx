@@ -13,6 +13,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const [activeLoaded, setActiveLoaded] = useState<boolean>(false);
     const [loadedCovers, setLoadedCovers] = useState<Record<number, boolean>>({});
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const THUMBNAIL_API_PATH = `${apiHost}/api/thumbnail`;
 
     const coverWidth = 130;
@@ -91,8 +92,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                         xRem = side * (base + sideIndex * (thicknessRem + minGapRem));
                     }
                     if (side === 1) {
-                        // Allign the right side
-                        xRem -= 0.6
+                        xRem -= 0.6;
                     }
 
                     const translateX = xRem;
@@ -100,19 +100,19 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                     const rotateY = isActive ? 0 : (side < 0 ? 80 : 90);
                     const scale = isActive ? 1 : 0.9;
                     const zIndex = isActive ? 100 : 95 - sideIndex;
+                    const isBookHovered = !isActive && hoveredIndex === index;
 
                     const fileLink = `${basePath}/reader?filePath=${encodeURIComponent(folder.folderName + '/' + fileName)}`;
 
                     return (
                         <div
                             key={fileName}
-                            className="absolute bottom-4 left-1/2 origin-bottom cursor-pointer"
+                            className={`absolute bottom-4 left-1/2 origin-bottom ${isActive ? '' : 'pointer-events-none'}`}
                             style={{
-                                transform: `translateX(-50%) translateX(${translateX}rem) translateZ(${translateZ}px)`,
+                                transform: `translateX(-50%) translateX(${translateX}rem) translateZ(${translateZ}px) translateY(${isBookHovered ? '-8px' : '0'})`,
                                 transition: 'transform 400ms cubic-bezier(.25,1,.25,1)',
                                 zIndex
                             }}
-                            onClick={() => setActiveIndex(index)}
                         >
                             <div className="relative" style={{ width: coverWidth, height: coverHeight }}>
                                 <div
@@ -124,14 +124,12 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
                                 >
                                     {/* Front cover  */}
                                     <div
-                                        className="absolute inset-0 overflow-hidden"
+                                        className={`absolute inset-0 overflow-hidden ${!isActive ? 'pointer-events-none' : ''}`}
                                         style={{ transform: `translateZ(${bookThickness / 2}px)` }}
                                     >
                                         {isActive ? (
                                             activeLoaded ? (
-                                                <a
-                                                    href={fileLink}
-                                                >
+                                                <a href={fileLink}>
                                                     <img
                                                         src={`${THUMBNAIL_API_PATH}/${folder.folderName}/${fileName}`}
                                                         alt={fileName}
@@ -156,11 +154,14 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
 
                                     {/* Spine */}
                                     <div
-                                        className="absolute top-0 left-0 h-full bg-gradient-to-b from-neutral-800 to-neutral-950 shadow-inner ring-1 ring-black/30 flex items-center justify-center"
+                                        className={`absolute top-0 left-0 h-full bg-gradient-to-b from-neutral-800 to-neutral-950 shadow-inner ring-1 ring-black/30 flex items-center justify-center ${!isActive ? 'cursor-pointer pointer-events-auto' : ''}`}
                                         style={{
                                             width: bookThickness,
                                             transform: `translateX(-${bookThickness / 2}px) rotateY(-90deg)`
                                         }}
+                                        onClick={() => !isActive && setActiveIndex(index)}
+                                        onMouseEnter={() => !isActive && setHoveredIndex(index)}
+                                        onMouseLeave={() => hoveredIndex === index && setHoveredIndex(null)}
                                     >
                                         <span
                                             className="text-[12px] font-semibold tracking-wide text-neutral-200 [writing-mode:vertical-rl] [text-orientation:mixed]"
