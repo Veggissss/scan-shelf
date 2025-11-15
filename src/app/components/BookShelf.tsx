@@ -106,7 +106,7 @@ const BookShelf: React.FC<BookShelfProps> = ({ folder, apiHost }) => {
 
                     return (
                         <div
-                            key={fileName}
+                            key={`${fileName}-${index}`}
                             className={`absolute bottom-4 left-1/2 origin-bottom ${isActive ? '' : 'pointer-events-none'}`}
                             style={{
                                 transform: `translateX(-50%) translateX(${translateX}rem) translateZ(${translateZ}px) translateY(${isBookHovered ? '-8px' : '0'})`,

@@ -106,8 +106,8 @@ function ShelfPage(): React.JSX.Element {
         <p>Showing {visibleFolders.length} of {folders.length} series</p>
       </div>
       <div className="folders-grid">
-        {visibleFolders.map(f => (
-          <BookShelf key={f.folderName} folder={f} apiHost={apiHost} />
+        {visibleFolders.map((f, index) => (
+          <BookShelf key={`${f.folderName}-${index}`} folder={f} apiHost={apiHost} />
         ))}
         {visibleCount < folders.length && (
           <div
