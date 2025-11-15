@@ -5,7 +5,7 @@ require('dotenv').config({ path: path.resolve(__dirname, './public.env') });
 const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
-const sharp = require('sharp');
+const Jimp = require('jimp');
 const vision = require('@google-cloud/vision');
 const AdmZip = require('adm-zip');
 
@@ -89,10 +89,10 @@ app.get('/api/thumbnail/:folderName/:fileName', async (req, res) => {
             return res.status(500).send('Failed to extract image.');
         }
 
-        const resized = await sharp(imageBuffer)
-            .resize(1125, 1600, { fit: 'cover', position: 'center', withoutEnlargement: true })
-            .jpeg({ quality: 100, })
-            .toBuffer();
+        const img = await Jimp.read(imageBuffer);
+        img.cover(1125, 1600);
+        img.quality(100);
+        const resized = await img.getBufferAsync(Jimp.MIME_JPEG);
 
         // Cache for a week
         const cacheTime = 60 * 60 * 24 * 7
