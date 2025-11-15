@@ -1,5 +1,4 @@
-# Node 20-alpine is broken when using npm install...
-FROM arm32v7/node:18.20.4-alpine
+FROM arm32v7/node:22.21.1-alpine AS production
 ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
