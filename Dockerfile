@@ -1,5 +1,5 @@
 # Stage 1: Build the application (Non-ARM)
-FROM --platform=linux/amd64 node:18.20.4-alpine AS build
+FROM --platform=linux/amd64 node:22.21.1-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --verbose
@@ -7,9 +7,18 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application (ARM)
-FROM arm32v7/node:18.20.4-alpine AS production
+FROM arm32v7/node:22.21.1-alpine AS production
+ENV NODE_ENV=production
 WORKDIR /app
-COPY --from=build /app .
+
+# Install production deps
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Copy runtime artifacts
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+
 EXPOSE 3000
 
 # Start the Next.js application
