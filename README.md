@@ -71,8 +71,8 @@ docker pull veggissss/scan-shelf:backend
 docker run \
   --name=ScanShelfBackend \
   --restart=unless-stopped \
-  -v PATH_TO_JSON.json/google-service-account.json:/usr/src/app/google-service-account.json \
-  -v PATH_TO_EPUB_FOLDER:/usr/src/app/public \
+  -v PATH_TO_JSON.json/google-service-account.json:/app/google-service-account.json \
+  -v PATH_TO_EPUB_FOLDER:/app/public \
   -p 3001:3001 \
   -d veggissss/scan-shelf:backend
 ```
