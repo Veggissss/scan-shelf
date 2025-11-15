@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application (ARM)
-FROM arm32v7/node:22.21.1-alpine AS production
+FROM --platform=linux/arm/v7 node:22-alpine AS production
 ENV NODE_ENV=production
 WORKDIR /app
 

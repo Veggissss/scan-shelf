@@ -23,3 +23,10 @@
 **/.old
 LICENSE
 README.md
+.git
+.gitignore
+.vscode
+.vs
+node_modules
+npm-debug.log*
+*.log

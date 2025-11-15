@@ -1,13 +1,14 @@
-FROM arm32v7/node:22.21.1-alpine AS production
+FROM --platform=linux/arm/v7 node:22-alpine
 ENV NODE_ENV=production
+WORKDIR /app
 
-WORKDIR /usr/src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN npm install --verbose
-RUN mv node_modules ../
-COPY . .
-RUN chown -R node /usr/src/app
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY index.js ./
+COPY public.env ./
+COPY public ./public
+
 USER node
 EXPOSE 3001
-
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
