@@ -37,4 +37,5 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/scan-shelf:backend
+            ${{ secrets.DOCKER_USERNAME }}/scan-shelf:backend-${{ github.run_number }}
           platforms: linux/arm/v7
