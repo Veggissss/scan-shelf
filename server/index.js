@@ -7,7 +7,6 @@ const express = require('express');
 const cors = require('cors');
 const vision = require('@google-cloud/vision');
 const AdmZip = require('adm-zip');
-const jimp = require('jimp');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -89,10 +88,6 @@ app.get('/api/thumbnail/:folderName/:fileName', async (req, res) => {
             return res.status(500).send('Failed to extract image.');
         }
 
-        const img = await jimp.Jimp.read(imageBuffer);
-        img.cover({ w: 1125, h: 1600 });
-        const resized = await img.getBuffer('image/jpeg', { quality: 100 });
-
         // Cache for a week
         const cacheTime = 60 * 60 * 24 * 7
         const headers = {
@@ -100,7 +95,7 @@ app.get('/api/thumbnail/:folderName/:fileName', async (req, res) => {
             'Cache-Control': `public, max-age=${cacheTime}, immutable`,
         };
         res.set(headers);
-        res.send(resized);
+        res.send(imageBuffer);
     } catch (err) {
         console.error('Error generating thumbnail:', err);
         res.status(500).send('Failed to generate thumbnail.');
