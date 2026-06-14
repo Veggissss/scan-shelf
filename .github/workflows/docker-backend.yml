@@ -38,4 +38,4 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/scan-shelf:backend
             ${{ secrets.DOCKER_USERNAME }}/scan-shelf:backend-${{ github.run_number }}
-          platforms: linux/arm/v7
+          platforms: linux/arm/v7, linux/amd64

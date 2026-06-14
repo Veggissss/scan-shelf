@@ -1,4 +1,5 @@
-FROM --platform=linux/arm/v7 node:22-alpine
+ARG TARGETPLATFORM
+FROM --platform=${TARGETPLATFORM} node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 
